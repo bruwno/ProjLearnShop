@@ -1,0 +1,26 @@
+@using LearnShop.Model.Sales
+@inherits ComponentBase
+
+<div class="w-screen h-full px-3 py-2 mx-auto bg-white rounded-lg shadow-md">
+    <Stepper step="1" />
+    <div class="flex flex-col gap-3 py-3 ">     
+        <ProductOnCart
+            ProductImage="@ProductImage"
+            ProductName="@ProductName" 
+            ProductPrice="@ProductPrice"
+        />
+    </div>
+</div>
+
+@code {
+    private List<Order> orders = new List<Order>();
+
+    [Parameter]
+    public string ProductName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProductImage { get; set; } = string.Empty;
+
+    [Parameter]
+    public decimal ProductPrice { get; set; } = 0m;
+}

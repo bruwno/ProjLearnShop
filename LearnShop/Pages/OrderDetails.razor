@@ -1,0 +1,60 @@
+@page "/detalhes-pedido"
+
+<PageTitle>Detalhes do pedido</PageTitle>
+
+<PageHeader
+    Title="DETALHES DO PEDIDO"
+    TextSize="2xl"
+/>
+
+<div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto h-screen">
+
+    <div class="text-center text-lg font-bold mb-2">
+        Pedido: 995 - @DateTime.Parse("2025-03-17").ToString("dd/MM/yyyy")
+    </div>
+
+    <OrderStatus Status="Concluído" TextSize="lg" />
+
+
+    <div class="bg-gray-100 p-6 rounded-lg w-full max-w-md shadow-md mt-2">
+        <div class="flex items-center space-x-4 mb-6">
+
+            <div class="w-15 h-15 bg-gray-300 rounded-md flex items-center justify-center">
+                <span class="text-sm material-icons">image</span>
+            </div>
+
+            <div class="text-left">
+                <p class="font-bold text-lg">Ebook Clean Code</p>
+                <p>Quantidade: 1</p>
+            </div>
+            
+        </div>
+
+        <div class="text-left mb-4">
+            <p class="font-bold text-lg">VALOR:</p>
+            <p>R$ 279,00</p>
+        </div>
+
+        <div class="text-left">
+            <p class="font-bold text-lg">FORMA DE PAGAMENTO:</p>
+            <p>
+                CARTÃO DE CRÉDITO<br />
+                (2x 139,50 sem juros)
+            </p>
+        </div>
+    </div>
+
+    <div class = "mt-6 flex items-center font-bold">
+        <Button Text="Voltar" 
+                Icon="arrow_left" 
+                TextColor="#FFF" 
+                BackgroundColor="#151773"
+                HoverBackgroundColor="#23238a" 
+                Size="md" 
+                Width="min-w-[125px]"
+                PreventDefaultStatus=true
+                OnClick="@(()=>{})" 
+        />
+    </div>
+</div>
+

@@ -1,0 +1,46 @@
+@inherits ComponentBase
+
+<p class="text-@(ProductDescriptionTextSize)">@ProductDescription</p>
+
+<div class="text-xs text-right">
+    <div>
+        <div>
+            <p class="mt-2 text-@(LabelsTextSize) font-normal text-left">Editora:</p>
+        </div>
+
+        <div class="mb-1 text-@(PublisherTextSize) font-semibold text-left">
+            <a class="" href="">@(Publisher)</a>
+        </div>
+
+        <div>
+            <p class="text-@(LabelsTextSize) font-normal text-left">Categoria:</p>
+        </div>
+        
+        <div class="text-@(CategoryTextSize) font-semibold text-left">
+            <a class="border-b text-blue-950" href="">@(Category)</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ProductDescription { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Publisher { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Category { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProductDescriptionTextSize { get; set; } = "sm";
+
+    [Parameter]
+    public string PublisherTextSize { get; set; } = "sm";
+
+    [Parameter]
+    public string CategoryTextSize { get; set; } = "sm";
+
+    [Parameter]
+    public string LabelsTextSize { get; set; } = "sm";
+}

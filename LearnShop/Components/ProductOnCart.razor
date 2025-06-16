@@ -1,0 +1,54 @@
+@using LearnShop.Components
+@inherits ComponentBase
+
+<div class="w-full h-full p-4 bg-gray-200 rounded-lg shadow-lg border-b-3 border-t-1 border-b-blue-600">
+    <div class="flex flex-col w-full gap-1">
+        <div class="flex flex-row items-center w-full">
+            <div class="flex-shrink-0 flex justify-center items-center border-dashed rounded-sm max-w-[100px] max-h-[145px] h-[95px] w-[90px] border-1 bg-gradient-to-br from-green-600 to-blue-700">
+                <ProductImage
+                    Image="@ProductImage" 
+                    Alt="@ProductName"
+                    Height="95px"
+                    Width="90px"
+                    ObjectContain="contain"
+                />
+            </div>
+            <h2 class="ml-4 text-xl font-bold text-gray-800">
+                @ProductName
+            </h2>
+        </div>
+        <div class="flex flex-row items-center justify-between w-full">
+            <PriceTag
+                PriceValue="@ProductPrice" 
+                TextSize="xl"
+            />
+            <div class="ml-auto">
+                <Counter
+                    QuantityChanged="OnQuantityChanged"
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ProductName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProductImage { get; set; } = string.Empty;
+
+    [Parameter]
+    public decimal ProductPrice { get; set; } = 0m;
+
+    [Parameter]
+    public EventCallback<int> QuantityChanged { get; set; }
+
+    private int quantity = 1;
+
+    private void OnQuantityChanged(int newQuantity)
+    {
+        quantity = newQuantity;
+        QuantityChanged.InvokeAsync(quantity);
+    }
+}

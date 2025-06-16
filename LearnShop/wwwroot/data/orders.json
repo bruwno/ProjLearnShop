@@ -1,0 +1,32 @@
+[
+    {
+      "Number": 101,
+      "Date": "2024-03-15T00:00:00",
+      "ProductName": "Dominando C# Avançado",
+      "DownloadUrl": "#"
+    },
+    {
+      "Number": 102,
+      "Date": "2024-03-16T00:00:00",
+      "ProductName": "ASP.NET Core Essencial",
+      "DownloadUrl": "#"
+    },
+    {
+      "Number": 103,
+      "Date": "2024-03-17T00:00:00",
+      "ProductName": "Blazor na Prática",
+      "DownloadUrl": "#"
+    },
+    {
+      "Number": 104,
+      "Date": "2024-03-18T00:00:00",
+      "ProductName": "Entity Framework Core Profissional",
+      "DownloadUrl": "#"
+    },
+    {
+      "Number": 105,
+      "Date": "2024-03-19T00:00:00",
+      "ProductName": "Design Patterns em .NET",
+      "DownloadUrl": "#"
+    }
+  ]

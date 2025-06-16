@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "title": "Responsive Web Design",
+    "description": "Cobertura de grids fluidos, imagens flexíveis e media queries para criar sites adaptáveis a qualquer dispositivo, focando performance e manutenção.",
+    "imageUrl": "https://picsum.photos/360/360?random=1",
+    "author": "Ethan Marcotte",
+    "publisher": "A Book Apart",
+    "category": "Desenvolvimento Web",
+    "price": 29.9
+  },
+  {
+    "id": 2,
+    "title": "HTML5 for Master Developers",
+    "description": "Guia avançado de HTML5: elementos semânticos, multimídia e APIs Canvas e Web Storage, com técnicas para desempenho e acessibilidade.",
+    "imageUrl": "https://picsum.photos/360/360?random=2",
+    "author": "Alex Ronquillo",
+    "publisher": "Apress",
+    "category": "Desenvolvimento Web",
+    "price": 39.9
+  },
+  {
+    "id": 3,
+    "title": "JavaScript: Novice to Ninja",
+    "description": "Guia completo de JavaScript, cobrindo DOM, eventos, AJAX e programação assíncrona, com projetos práticos e código modular.",
+    "imageUrl": "https://picsum.photos/360/360?random=3",
+    "author": "Darren Jones",
+    "publisher": "SitePoint",
+    "category": "Desenvolvimento Web",
+    "price": 24.9
+  },
+  {
+    "id": 4,
+    "title": "CSS: The Definitive Guide",
+    "description": "Referência de CSS com seletores básicos, Flexbox, Grid e animações, incluindo exemplos para layouts responsivos e otimização.",
+    "imageUrl": "https://picsum.photos/360/360?random=4",
+    "author": "Eric A. Meyer",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 49.9
+  },
+  {
+    "id": 5,
+    "title": "Learning PHP, MySQL & JavaScript",
+    "description": "Guia prático de PHP, MySQL e JavaScript para criar aplicações web dinâmicas, com exemplos de e-commerce e boas práticas de segurança.",
+    "imageUrl": "https://picsum.photos/360/360?random=5",
+    "author": "Robin Nixon",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 34.9
+  },
+  {
+    "id": 6,
+    "title": "Head First HTML and CSS",
+    "description": "Abordagem visual de HTML e CSS com exercícios e diagramas que facilitam o aprendizado de semântica, seletores e layouts responsivos.",
+    "imageUrl": "https://picsum.photos/360/360?random=6",
+    "author": "Elisabeth Robson e Eric Freeman",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 29.9
+  },
+  {
+    "id": 7,
+    "title": "JavaScript and jQuery: Interactive Front-End Development",
+    "description": "Introdução a JavaScript e jQuery para manipular o DOM, animações e eventos, com exemplos claros e práticas de código limpo.",
+    "imageUrl": "https://picsum.photos/360/360?random=7",
+    "author": "Jon Duckett",
+    "publisher": "Wiley",
+    "category": "Desenvolvimento Web",
+    "price": 39.9
+  },
+  {
+    "id": 8,
+    "title": "Eloquent JavaScript",
+    "description": "Exploração de JS, desde fundamentos até programação funcional e assíncrona, com projetos práticos em Node.js.",
+    "imageUrl": "https://picsum.photos/360/360?random=8",
+    "author": "Marijn Haverbeke",
+    "publisher": "No Starch Press",
+    "category": "Desenvolvimento Web",
+    "price": 34.9
+  },
+  {
+    "id": 9,
+    "title": "You Don’t Know JS",
+    "description": "Série sobre JS avançado: escopos, closures, protótipos e programação assíncrona, para desenvolvedores intermediários.",
+    "imageUrl": "https://picsum.photos/360/360?random=9",
+    "author": "Kyle Simpson",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 29.9
+  },
+  {
+    "id": 10,
+    "title": "CSS Secrets",
+    "description": "Coleção de truques avançados de CSS — transições, animações, Flexbox e Grid — para designs inovadores e eficientes.",
+    "imageUrl": "https://picsum.photos/360/360?random=10",
+    "author": "Lea Verou",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 34.9
+  },
+  {
+    "id": 11,
+    "title": "HTML and CSS: Design and Build Websites",
+    "description": "Guia visual de HTML e CSS com ilustrações que explicam estrutura, tipografia e layouts responsivos para iniciantes.",
+    "imageUrl": "https://picsum.photos/360/360?random=11",
+    "author": "Jon Duckett",
+    "publisher": "Wiley",
+    "category": "Desenvolvimento Web",
+    "price": 24.9
+  },
+  {
+    "id": 12,
+    "title": "Learning Web Design: A Beginner's Guide to HTML, CSS, JavaScript, and Web Graphics",
+    "description": "Manual para iniciantes em HTML, CSS, JavaScript e gráficos web, com exercícios que ensinam desde a estruturação até layouts responsivos.",
+    "imageUrl": "https://picsum.photos/360/360?random=12",
+    "author": "Jennifer Niederst Robbins",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 29.9
+  },
+  {
+    "id": 13,
+    "title": "Android Programming for Beginners",
+    "description": "Introdução ao desenvolvimento Android em Java e Kotlin, cobrindo Activities, Fragments e publicação de apps na Play Store.",
+    "imageUrl": "https://picsum.photos/360/360?random=13",
+    "author": "John Horton",
+    "publisher": "Packt Publishing",
+    "category": "Desenvolvimento Movel",
+    "price": 24.9
+  },
+  {
+    "id": 14,
+    "title": "iOS Development with Swift",
+    "description": "Guia de Swift para iOS: UIKit, Core Data, APIs REST, testes e depuração, com exemplos práticos para a App Store.",
+    "imageUrl": "https://picsum.photos/360/360?random=14",
+    "author": "Craig Grummitt",
+    "publisher": "Apress",
+    "category": "Desenvolvimento Movel",
+    "price": 39.9
+  },
+  {
+    "id": 15,
+    "title": "Flutter for Beginners",
+    "description": "Tutorial de Dart e Flutter para criar apps multiplataforma, abordando widgets, gerenciamento de estado e integração com APIs.",
+    "imageUrl": "https://picsum.photos/360/360?random=15",
+    "author": "Alessandro Biessek",
+    "publisher": "Packt Publishing",
+    "category": "Desenvolvimento Movel",
+    "price": 29.9
+  },
+  {
+    "id": 16,
+    "title": "Xamarin with Visual Studio",
+    "description": "Desenvolvimento multiplataforma com Xamarin.Forms e C#, incluindo configuração no Visual Studio e serviços nativos.",
+    "imageUrl": "https://picsum.photos/360/360?random=16",
+    "author": "Matt Goldman",
+    "publisher": "Apress",
+    "category": "Desenvolvimento Movel",
+    "price": 34.9
+  },
+  {
+    "id": 17,
+    "title": "React Native in Action",
+    "description": "Guia prático de React Native para criar apps iOS e Android, com navegação, animações e gerenciamento de estado.",
+    "imageUrl": "https://picsum.photos/360/360?random=17",
+    "author": "Nader Dabit",
+    "publisher": "Manning Publications",
+    "category": "Desenvolvimento Movel",
+    "price": 39.9
+  },
+  {
+    "id": 18,
+    "title": "Kotlin for Android Developers",
+    "description": "Guia de Kotlin para Android, incluindo fundamentos, corrotinas e migração de Java com exemplos práticos.",
+    "imageUrl": "https://picsum.photos/360/360?random=18",
+    "author": "Antonio Leiva",
+    "publisher": "Apress",
+    "category": "Desenvolvimento Movel",
+    "price": 29.9
+  },
+  {
+    "id": 19,
+    "title": "The Busy Coder's Guide to Android Development",
+    "description": "Referência abrangente de Android: serviços, notificações e integração com APIs, com exemplos detalhados.",
+    "imageUrl": "https://picsum.photos/360/360?random=19",
+    "author": "Mark Murphy",
+    "publisher": "CommonsWare",
+    "category": "Desenvolvimento Movel",
+    "price": 34.9
+  },
+  {
+    "id": 20,
+    "title": "Android App Development for Dummies",
+    "description": "Introdução ao Android Studio e programação em Java/Kotlin, com projetos práticos e dicas de publicação.",
+    "imageUrl": "https://picsum.photos/360/360?random=20",
+    "author": "Donn Felker",
+    "publisher": "Wiley",
+    "category": "Desenvolvimento Movel",
+    "price": 24.9
+  },
+  {
+    "id": 21,
+    "title": "iOS Programming: The Big Nerd Ranch Guide",
+    "description": "Guia completo de Swift e UIKit com projetos práticos, do protótipo à publicação, incluindo Core Data.",
+    "imageUrl": "https://picsum.photos/360/360?random=21",
+    "author": "Christian Keur et al.",
+    "publisher": "Big Nerd Ranch",
+    "category": "Desenvolvimento Movel",
+    "price": 39.9
+  },
+  {
+    "id": 22,
+    "title": "Head First Android Development",
+    "description": "Aprendizado visual de Android Studio e Java/Kotlin com exercícios que facilitam a retenção de conceitos.",
+    "imageUrl": "https://picsum.photos/360/360?random=22",
+    "author": "David Griffiths e Dawn Griffiths",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Movel",
+    "price": 29.9
+  },
+  {
+    "id": 23,
+    "title": "Mobile App Development with Ionic",
+    "description": "Desenvolvimento híbrido com Ionic e Angular, cobrindo navegação, animações e APIs REST para apps móveis.",
+    "imageUrl": "https://picsum.photos/360/360?random=23",
+    "author": "Scott Moss",
+    "publisher": "Packt Publishing",
+    "category": "Desenvolvimento Movel",
+    "price": 34.9
+  },
+  {
+    "id": 24,
+    "title": "Building Mobile Apps with Sencha Touch",
+    "description": "Guia de Sencha Touch para apps híbridos com HTML5, CSS e JavaScript, incluindo integração de dados.",
+    "imageUrl": "https://picsum.photos/360/360?random=24",
+    "author": "David Kaneda",
+    "publisher": "Apress",
+    "category": "Desenvolvimento Movel",
+    "price": 29.9
+  },
+  {
+    "id": 25,
+    "title": "Clean Code",
+    "description": "Princípios para escrever código legível e manutenível em Java, incluindo refatoração e testes unitários.",
+    "imageUrl": "https://picsum.photos/360/360?random=25",
+    "author": "Robert C. Martin",
+    "publisher": "Prentice Hall",
+    "category": "Engenharia de Software",
+    "price": 39.9
+  },
+  {
+    "id": 26,
+    "title": "The Pragmatic Programmer",
+    "description": "Conselhos sobre automação, testes, refatoração e soft skills para criar software sustentável.",
+    "imageUrl": "https://picsum.photos/360/360?random=26",
+    "author": "Andrew Hunt e David Thomas",
+    "publisher": "Addison-Wesley",
+    "category": "Engenharia de Software",
+    "price": 29.9
+  },
+  {
+    "id": 27,
+    "title": "Design Patterns",
+    "description": "Descrição de 23 padrões orientados a objetos, como Singleton e Observer, com exemplos em C++.",
+    "imageUrl": "https://picsum.photos/360/360?random=27",
+    "author": "Erich Gamma et al.",
+    "publisher": "Addison-Wesley",
+    "category": "Engenharia de Software",
+    "price": 49.9
+  },
+  {
+    "id": 28,
+    "title": "Refactoring",
+    "description": "Técnicas de refatoração em Java para melhorar o design do código sem alterar seu comportamento.",
+    "imageUrl": "https://picsum.photos/360/360?random=28",
+    "author": "Martin Fowler",
+    "publisher": "Addison-Wesley",
+    "category": "Engenharia de Software",
+    "price": 34.9
+  },
+  {
+    "id": 29,
+    "title": "Continuous Delivery",
+    "description": "Guia de entrega contínua: automação de testes, deploy e monitoramento para lançar software com confiança.",
+    "imageUrl": "https://picsum.photos/360/360?random=29",
+    "author": "Jez Humble e David Farley",
+    "publisher": "Addison-Wesley",
+    "category": "Engenharia de Software",
+    "price": 39.9
+  },
+  {
+    "id": 30,
+    "title": "Learning React",
+    "description": "Introdução ao React: componentes, hooks e contexto, com exemplos práticos para construir SPAs interativas.",
+    "imageUrl": "https://picsum.photos/360/360?random=30",
+    "author": "Alex Banks e Eve Porcello",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 34.9
+  },
+  {
+    "id": 31,
+    "title": "Vue.js Up & Running",
+    "description": "Guia prático para Vue.js: componentes reativos, diretivas e Vue Router, com projetos reais de SPAs.",
+    "imageUrl": "https://picsum.photos/360/360?random=31",
+    "author": "Callum Macrae",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 39.9
+  },
+  {
+    "id": 32,
+    "title": "Angular in Action",
+    "description": "Cobertura de Angular: módulos, componentes e RxJS, com exemplos para aplicações empresariais escaláveis.",
+    "imageUrl": "https://picsum.photos/360/360?random=32",
+    "author": "Jeremy Wilken",
+    "publisher": "Manning Publications",
+    "category": "Desenvolvimento Web",
+    "price": 44.9
+  },
+  {
+    "id": 33,
+    "title": "Next.js in Action",
+    "description": "Framework Next.js: SSR, SSG e API Routes para React, com cenários de alto desempenho.",
+    "imageUrl": "https://picsum.photos/360/360?random=33",
+    "author": "Michele Riva",
+    "publisher": "Manning Publications",
+    "category": "Desenvolvimento Web",
+    "price": 39.9
+  },
+  {
+    "id": 34,
+    "title": "Svelte and Sapper in Action",
+    "description": "Aprenda Svelte e Sapper para criar apps leves e reativos, com exemplos de SSR e SSG.",
+    "imageUrl": "https://picsum.photos/360/360?random=34",
+    "author": "Mark Volkmann",
+    "publisher": "Manning Publications",
+    "category": "Desenvolvimento Web",
+    "price": 44.9
+  },
+  {
+    "id": 35,
+    "title": "Designing Web APIs",
+    "description": "Estratégias RESTful, GraphQL e HTTP/2 para projetar APIs escaláveis e seguras.",
+    "imageUrl": "https://picsum.photos/360/360?random=35",
+    "author": "Brenda Jin, Saurabh Sahni e Amir Shevat",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 34.9
+  },
+  {
+    "id": 36,
+    "title": "Building Progressive Web Apps",
+    "description": "Criação de PWAs: service workers, cache e notificações push para experiências offline.",
+    "imageUrl": "https://picsum.photos/360/360?random=36",
+    "author": "Tal Ater",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 29.9
+  },
+  {
+    "id": 37,
+    "title": "Modern CSS with Tailwind",
+    "description": "Guia de Tailwind CSS: classes utilitárias para layouts responsivos sem sair do HTML.",
+    "imageUrl": "https://picsum.photos/360/360?random=37",
+    "author": "Noel Rappin",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Web",
+    "price": 34.9
+  },
+  {
+    "id": 38,
+    "title": "Mastering Kotlin",
+    "description": "Cobertura avançada de Kotlin: corrotinas, DSLs e programação funcional para apps móveis.",
+    "imageUrl": "https://picsum.photos/360/360?random=38",
+    "author": "Nate Ebel",
+    "publisher": "Packt Publishing",
+    "category": "Desenvolvimento Movel",
+    "price": 39.9
+  },
+  {
+    "id": 39,
+    "title": "Android Jetpack Compose",
+    "description": "Construa interfaces Android com Compose: layouts declarativos, estado e animações.",
+    "imageUrl": "https://picsum.photos/360/360?random=39",
+    "author": "Michael Gittins e Tom Marsicano",
+    "publisher": "Packt Publishing",
+    "category": "Desenvolvimento Movel",
+    "price": 34.9
+  },
+  {
+    "id": 40,
+    "title": "Pro iOS 17 Development",
+    "description": "Recursos do iOS 17: SwiftUI, novas APIs e práticas para apps nativos de alto desempenho.",
+    "imageUrl": "https://picsum.photos/360/360?random=40",
+    "author": "Wallace Wang",
+    "publisher": "Apress",
+    "category": "Desenvolvimento Movel",
+    "price": 49.9
+  },
+  {
+    "id": 41,
+    "title": "Hands-On Flutter",
+    "description": "Projetos práticos em Flutter: widgets personalizados, gerenciamento de estado e Firebase.",
+    "imageUrl": "https://picsum.photos/360/360?random=41",
+    "author": "Marco L. Napoli",
+    "publisher": "Packt Publishing",
+    "category": "Desenvolvimento Movel",
+    "price": 44.9
+  },
+  {
+    "id": 42,
+    "title": "Mobile Design Pattern Gallery",
+    "description": "Coleção de padrões de design para apps móveis, incluindo navegação e formulários eficientes.",
+    "imageUrl": "https://picsum.photos/360/360?random=42",
+    "author": "Theresa Neil",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Movel",
+    "price": 29.9
+  },
+  {
+    "id": 43,
+    "title": "Learning Xamarin",
+    "description": "Introdução ao Xamarin.Forms: compartilhe UI e lógica em C# para Android e iOS.",
+    "imageUrl": "https://picsum.photos/360/360?random=43",
+    "author": "Nishant Srivastava",
+    "publisher": "BPB Publications",
+    "category": "Desenvolvimento Movel",
+    "price": 29.9
+  },
+  {
+    "id": 44,
+    "title": "React Native Cookbook",
+    "description": "Receitas prontas para React Native: componentes, navegação e integração com APIs nativas.",
+    "imageUrl": "https://picsum.photos/360/360?random=44",
+    "author": "Jonathan Lebensold",
+    "publisher": "O'Reilly Media",
+    "category": "Desenvolvimento Movel",
+    "price": 39.9
+  },
+  {
+    "id": 45,
+    "title": "Code Complete",
+    "description": "Princípios e práticas para desenvolvimento de código robusto, cobrindo design, depuração e testes.",
+    "imageUrl": "https://picsum.photos/360/360?random=45",
+    "author": "Steve McConnell",
+    "publisher": "Microsoft Press",
+    "category": "Engenharia de Software",
+    "price": 44.9
+  },
+  {
+    "id": 46,
+    "title": "Working Effectively with Legacy Code",
+    "description": "Táticas para modificar código legado em segurança, com testes e injeção de dependências.",
+    "imageUrl": "https://picsum.photos/360/360?random=46",
+    "author": "Michael Feathers",
+    "publisher": "Prentice Hall",
+    "category": "Engenharia de Software",
+    "price": 49.9
+  },
+  {
+    "id": 47,
+    "title": "The Mythical Man-Month",
+    "description": "Estudos de caso sobre gerenciamento de projetos de software, produtividade e armadilhas de cronogramas.",
+    "imageUrl": "https://picsum.photos/360/360?random=47",
+    "author": "Frederick P. Brooks Jr.",
+    "publisher": "Addison-Wesley",
+    "category": "Engenharia de Software",
+    "price": 34.9
+  },
+  {
+    "id": 48,
+    "title": "Accelerate",
+    "description": "Práticas DevOps e métricas de desempenho que impulsionam a entrega de software de alta qualidade.",
+    "imageUrl": "https://picsum.photos/360/360?random=48",
+    "author": "Nicole Forsgren, Jez Humble e Gene Kim",
+    "publisher": "IT Revolution",
+    "category": "Engenharia de Software",
+    "price": 39.9
+  },
+  {
+    "id": 49,
+    "title": "Building Microservices",
+    "description": "Princípios e padrões para projetar, implementar e operar microserviços escaláveis e resilientes.",
+    "imageUrl": "https://picsum.photos/360/360?random=49",
+    "author": "Sam Newman",
+    "publisher": "O'Reilly Media",
+    "category": "Engenharia de Software",
+    "price": 44.9
+  },
+  {
+    "id": 50,
+    "title": "Release It!",
+    "description": "Estratégias para construir sistemas robustos em produção, com foco em tolerância a falhas e escalabilidade.",
+    "imageUrl": "https://picsum.photos/360/360?random=50",
+    "author": "Michael Nygard",
+    "publisher": "Pragmatic Bookshelf",
+    "category": "Engenharia de Software",
+    "price": 39.9
+  },
+  {
+    "id": 51,
+    "title": "Introduction to Algorithms",
+    "description": "Aborda algoritmos fundamentais: ordenação, grafos e programação dinâmica, com rigor matemático.",
+    "imageUrl": "https://picsum.photos/360/360?random=51",
+    "author": "Thomas H. Cormen et al.",
+    "publisher": "MIT Press",
+    "category": "Algoritmos",
+    "price": 59.9
+  },
+  {
+    "id": 52,
+    "title": "The Algorithm Design Manual",
+    "description": "Princípios de design de algoritmos acompanhados de repositório de problemas e soluções práticas.",
+    "imageUrl": "https://picsum.photos/360/360?random=52",
+    "author": "Steven S. Skiena",
+    "publisher": "Springer",
+    "category": "Algoritmos",
+    "price": 49.9
+  },
+  {
+    "id": 53,
+    "title": "Grokking Algorithms",
+    "description": "Explicações visuais de algoritmos clássicos, como busca e ordenação, facilitando o entendimento.",
+    "imageUrl": "https://picsum.photos/360/360?random=53",
+    "author": "Aditya Y. Bhargava",
+    "publisher": "Manning Publications",
+    "category": "Algoritmos",
+    "price": 39.9
+  },
+  {
+    "id": 54,
+    "title": "Algorithms in C++",
+    "description": "Implementações em C++ de algoritmos essenciais, com análises de complexidade e casos práticos.",
+    "imageUrl": "https://picsum.photos/360/360?random=54",
+    "author": "Robert Sedgewick",
+    "publisher": "Addison-Wesley",
+    "category": "Algoritmos",
+    "price": 54.9
+  },
+  {
+    "id": 55,
+    "title": "Algorithms Unlocked",
+    "description": "Introdução acessível aos principais algoritmos, explicando conceitos de forma clara.",
+    "imageUrl": "https://picsum.photos/360/360?random=55",
+    "author": "Thomas H. Cormen",
+    "publisher": "MIT Press",
+    "category": "Algoritmos",
+    "price": 44.9
+  },
+  {
+    "id": 56,
+    "title": "Database System Concepts",
+    "description": "Fundamentos de sistemas de banco de dados: modelos, SQL, transações e otimização de consultas.",
+    "imageUrl": "https://picsum.photos/360/360?random=56",
+    "author": "Abraham Silberschatz, Henry F. Korth e S. Sudarshan",
+    "publisher": "McGraw-Hill",
+    "category": "Banco de Dados",
+    "price": 59.9
+  },
+  {
+    "id": 57,
+    "title": "SQL Antipatterns",
+    "description": "Identificação e correção de más práticas em SQL, com soluções para desempenho e manutenção.",
+    "imageUrl": "https://picsum.photos/360/360?random=57",
+    "author": "Bill Karwin",
+    "publisher": "Pragmatic Bookshelf",
+    "category": "Banco de Dados",
+    "price": 39.9
+  },
+  {
+    "id": 58,
+    "title": "Designing Data-Intensive Applications",
+    "description": "Arquiteturas para sistemas escaláveis: armazenamento, processamento em lote e streaming.",
+    "imageUrl": "https://picsum.photos/360/360?random=58",
+    "author": "Martin Kleppmann",
+    "publisher": "O'Reilly Media",
+    "category": "Banco de Dados",
+    "price": 49.9
+  },
+  {
+    "id": 59,
+    "title": "Seven Databases in Seven Weeks",
+    "description": "Visão geral de sete SGBDs populares, incluindo SQL e NoSQL, com exemplos práticos.",
+    "imageUrl": "https://picsum.photos/360/360?random=59",
+    "author": "Luc Perkins, Eric Redmond e Jim R. Wilson",
+    "publisher": "Addison-Wesley",
+    "category": "Banco de Dados",
+    "price": 44.9
+  },
+  {
+    "id": 60,
+    "title": "SQL Performance Explained",
+    "description": "Guia para otimizar consultas SQL, cobrindo índices, planos de execução e ajustes.",
+    "imageUrl": "https://picsum.photos/360/360?random=60",
+    "author": "Markus Winand",
+    "publisher": "Self-published",
+    "category": "Banco de Dados",
+    "price": 34.9
+  }
+]

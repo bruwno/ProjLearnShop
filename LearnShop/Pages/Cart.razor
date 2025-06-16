@@ -1,0 +1,96 @@
+@page "/carrinho"
+@inject NavigationManager NavigationManager
+@using LearnShop.Components
+
+<PageTitle>Carrinho</PageTitle>
+
+<PageHeader
+    Title="Carrinho"
+    TextSize="2xl"
+/>
+
+<div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto">
+    @if (step == 1)
+    {
+    <div class="flex flex-row items-center justify-center w-full m-2">
+        <CartOrderSummary
+            ProductName="O Programador Pragmático"
+            ProductImage="https://picsum.photos/360/360?random=60"
+            ProductPrice=29.99m
+        />
+    </div>
+    
+    <ClearCart/>
+
+    <div class="flex items-center justify-center w-full m-1">
+        <Subtotal 
+            ButtonText="CONTINUAR PARA O PAGAMENTO"
+            ButtonIcon="add_shopping_cart"
+            OnContinue="GoToPayment"
+        />
+    </div>
+    }
+    else if (step == 2)
+    {
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            <CartOrderPayment/>
+        </div>
+
+        <div class ="flex flex-col items-center justify-center w-full m-2">
+            <ProductOnCart
+                ProductName="O Programador Pragmático"
+                ProductImage="https://picsum.photos/360/360?random=60"
+                ProductPrice=29.99m
+            />
+        </div>
+
+        <ClearCart/>
+
+       <div class="flex items-center justify-center w-full m-1">
+        <Subtotal 
+            ButtonText="FECHAR PEDIDO"
+            ButtonIcon="shopping_cart_checkout"
+            OnContinue="GoToOrderPlaced"
+        />
+    </div>
+    }
+    else if (step == 3)
+    {
+    <div class="flex flex-row items-center justify-center w-full m-2">
+        <CartOrderPlaced
+            ProductName="O Programador Pragmático"
+            ProductImage="https://picsum.photos/360/360?random=60"
+            ProductPrice=29.99m
+            OrderNumber="12345"
+            PaymentType="Cartão de Crédito"
+        />
+    </div>
+
+    <div class="flex items-center justify-center w-full m-1">
+        <Subtotal 
+            ButtonText="IR À HOME"
+            ButtonIcon="home"
+            OnContinue="GoToHome"
+        />
+    </div>
+    }
+</div>
+
+@code {
+    private int step = 1;
+
+    private void GoToPayment()
+    {
+        step = 2;
+    }
+
+    private void GoToOrderPlaced()
+    {
+        step = 3;
+    }
+
+    private void GoToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

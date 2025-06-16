@@ -1,0 +1,65 @@
+@inherits ComponentBase
+@using LearnShop.Components
+
+<div class="px-1 py-2 mx-auto bg-white rounded-lg shadow-md w-screen h-[235px]">
+    <div class="w-full bg-[#e9e9e9] rounded-lg shadow-md">
+        <div class="flex flex-col font-semibold">
+            <div class="flex flex-row justify-between w-full p-2 m-1">
+                <p>Subtotal</p>
+                <p class="mr-1">@(SubtotalPrice.ToString("C2"))</p>
+            </div>
+            <div class="flex flex-row justify-between w-full p-2 m-1">
+                <p>Desconto</p>
+                <p class="mr-1">-@(Discount.ToString("C2"))</p>
+            </div>
+        </div>
+        <div class="flex flex-col justify-between w-full font-semibold rounded-b-lg shadow-md">
+            <div class="flex flex-row justify-between w-full font-semibold rounded-b-lg shadow-md bg-[#010B02] ">
+                <p class="m-2 ml-4 font-bold text-left text-white">TOTAL</p>
+                <p class="m-2 text-xl text-highlight">@(TotalPrice.ToString("C2"))</p>
+            </div>
+
+            <div class="flex flex-col items-center justify-between w-full p-2 m-1 mt-4">
+                <Button
+                    Text="@ButtonText"
+                    Size="md"
+                    Icon="@ButtonIcon"
+                    TextColor="#FFF"
+                    BackgroundColor="#151773"
+                    HoverBackgroundColor="#23238a"
+                    Width="500px"
+                    PreventDefaultStatus=true
+                    OnClick="@HandleContinue"
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ButtonText { get; set; } = "Continuar";
+
+    [Parameter]
+    public string ButtonIcon { get; set; } = "";
+
+    [Parameter]
+    public decimal SubtotalPrice { get; set; } = 29.99m;
+
+    [Parameter]
+    public decimal Discount { get; set; } = 5m;
+
+    [Parameter]
+    public decimal TotalPrice { get; set; } = 24.99m;
+
+    [Parameter]
+    public EventCallback OnContinue { get; set; }
+
+    private async Task HandleContinue()
+    {
+        if (OnContinue.HasDelegate)
+        {
+            await OnContinue.InvokeAsync();
+        }
+    }
+}

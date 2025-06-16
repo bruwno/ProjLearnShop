@@ -1,0 +1,16 @@
+@inherits ComponentBase
+
+<p class="px-2 text-@(TextSize) font-bold border-0 text-[@(TextColor)] rounded-2xl bg-gradient-to-r to-blue-500">
+    @PriceValue.ToString("C2")
+</p>
+
+@code {
+    [Parameter]
+    public decimal PriceValue { get; set; } = 0.0m;
+
+    [Parameter]
+    public string TextColor { get; set; } = "#151773";
+
+    [Parameter]
+    public string TextSize { get; set; } = "2xl";
+}

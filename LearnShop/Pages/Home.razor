@@ -1,0 +1,71 @@
+﻿@page "/"
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Model
+@using LearnShop.Components
+@using LearnShop.Model.Products
+@using Microsoft.JSInterop
+@inject IEbookService EbookService
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Home</PageTitle>
+
+<PageHeader Title="Home" TextSize="2xl" />
+
+<div class="container px-3 py-4 mx-auto">
+    <div class="flex items-center justify-center m-6">
+        <h1
+            class="p-2 font-semibold text-white rounded-lg md:text-3xl sm:text-sm bg-gradient-to-br from-green-500 to-blue-600 border-b-3 border-b-primary border-t-3 border-t-highlight animate-bounce">
+            E-books em destaque
+        </h1>
+    </div>
+
+    @if (isLoading)
+    {
+        <Loading />
+    }
+    else if (ebooks == null || !ebooks.Any())
+    {
+        <div class="py-8 text-center">
+            <p>Nenhum e-book encontrado.</p>
+        </div>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 justify-items-center">
+            @foreach (var ebook in ebooks)
+            {
+                <a
+                    href="@($"/product?productTitle={Uri.EscapeDataString(ebook.Title)}&productCategory={Uri.EscapeDataString(ebook.Category)}&productDescription={Uri.EscapeDataString(ebook.Description)}&productPrice={ebook.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}&productImage={Uri.EscapeDataString(ebook.ImageUrl)}")"
+                    class="transition-shadow duration-300 ease-in-out">
+                    <ProductCard ProductTitle="@ebook.Title" ProductDescription="@ebook.Description"
+                        ProductImage="@ebook.ImageUrl" Author="@ebook.Author" Price="@ebook.Price" Publisher="@ebook.Publisher"
+                        Category="@ebook.Category" TextColor="#000" />
+                </a>
+            }
+        </div>
+    }
+    
+    <button @onclick="ScrollToTop"
+        class="fixed z-50 p-3 text-white transition-colors duration-200 rounded-full shadow-lg bottom-8 right-8 bg-primary hover:bg-green-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+</div>
+
+@code {
+    private List<Ebook>? ebooks;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        ebooks = await EbookService.GetEbooksAsync();
+        isLoading = false;
+    }
+
+    private async Task ScrollToTop()
+    {
+        await JSRuntime.InvokeVoidAsync("window.scrollTo", 0, 0);
+    }
+}

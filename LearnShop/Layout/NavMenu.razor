@@ -1,0 +1,118 @@
+﻿@using LearnShop.Components
+@inject NavigationManager NavigationManager
+
+<div class="z-10 flex flex-col w-full">
+    <nav class="flex flex-row w-full justify-between items-center p-[1rem] bg-primary">
+        <div>
+            <CartWithBadge/>
+        </div>
+        <a href="/">
+            <div class="font-bold text-[1.5rem] md:text-[2rem]">
+                <h1 class="text-[#76be11]">Learn<span class="text-white">Shop</span></h1>
+            </div>
+        </a>
+
+        <div class="flex flex-row gap-4">
+            <button @onclick="TrocarEstadoMenu" type="button" id="botao-menu"
+                    class="text-sm text-white rounded-lg md:hidden">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M1 1h15M1 7h15M1 13h15"/>
+                </svg>
+            </button>
+
+            <div class="hidden md:flex flex-col text-white font-bold text-[0.9]">
+                <a href="/login">
+                    <h1>Olá, <span class="cursor-pointer">Entre</span> ou</h1>
+                </a>
+                <a href="/cadastrar/usuario">
+                    <h1 class="cursor-pointer">Cadastre-se</h1>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <SearchBox/>
+    <div class="@(menuAberto ? "" : "hidden") absolute top-[8.8rem] left-0 w-full z-50">
+        <div class=" bg-primary text-white h-[3rem] flex items-center justify-center w-full">
+            <h1 class="">Categorias</h1>
+        </div>
+        <div class="flex flex-col w-full text-white ">
+            <ul class="flex flex-col gap-3 justify-center items-center p-[1rem] bg-secondary text-[0.9rem]">
+                <li class="p-2 cursor-pointer hover:bg-blue-800 rounded-lg"
+                    @onclick="@(() => NavigateTo("/categoria/Algoritmos"))">Algoritmos
+                </li>
+                <li class="p-2 cursor-pointer hover:bg-blue-800 rounded-lg"
+                    @onclick="@(() => NavigateTo("/categoria/Banco-de-Dados"))">Banco de Dados
+                </li>
+                <li class="p-2 cursor-pointer hover:bg-blue-800 rounded-lg"
+                    @onclick="@(() => NavigateTo("/categoria/Desenvolvimento-Web"))">Desenvolvimento Web
+                </li>
+                <li class="p-2 cursor-pointer hover:bg-blue-800 rounded-lg"
+                    @onclick="@(() => NavigateTo("/categoria/Desenvolvimento-Movel"))">Desenvolvimento Móvel
+                </li>
+                <li class="p-2 cursor-pointer hover:bg-blue-800 rounded-lg"
+                    @onclick="@(() => NavigateTo("/categoria/Engenharia-de-Software"))">Engenharia de Software
+                </li>
+            </ul>
+        </div>
+        <div
+            class=" @(!isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
+            <button class="bg-highlight w-full rounded-[0.5rem] text-black">
+                ENTRAR
+            </button>
+            <h1 class="text-[0.9rem]">CADASTRE-SE</h1>
+        </div>
+        <div
+            class="@(isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
+            <div class="flex flex-row justify-between w-full">
+                <a href="/perfil">
+                    <h1 class="text-[1.2rem] border-b"><span class="mr-1 material-icons">person</span>Olá, Samuel</h1>
+                </a>
+                <a @onclick="@(() => NavigateTo("/pedidos"))" class="text-[1.2rem] text-highlight border-b">Meus
+                    Livros</a>
+            </div>
+
+            @* Manter essa implementação do botão no menu mobile *@
+            <button class="bg-highlight w-full rounded-[0.5rem] text-black" @onclick="@(() => NavigateTo("/"))">
+                SAIR
+            </button>
+
+        </div>
+    </div>
+    <div class="flex-col hidden text-white md:flex bg-primary">
+        <ul class="flex flex-row gap-3 justify-around items-center p-[0.7rem]  text-[1.2rem]">
+            <li class="p-2 cursor-pointer hover:bg-blue-700 rounded-lg"
+                @onclick="@(() => NavigateTo("/categoria/Algoritmos"))">Algoritmos
+            </li>
+            <li class="p-2 cursor-pointer hover:bg-blue-700 rounded-lg"
+                @onclick="@(() => NavigateTo("/categoria/Banco-de-Dados"))">Banco de Dados
+            </li>
+            <li class="p-2 cursor-pointer hover:bg-blue-700 rounded-lg"
+                @onclick="@(() => NavigateTo("/categoria/Desenvolvimento-Web"))">Desenvolvimento Web
+            </li>
+            <li class="p-2 cursor-pointer hover:bg-blue-700 rounded-lg"
+                @onclick="@(() => NavigateTo("/categoria/Desenvolvimento-Movel"))">Desenvolvimento Móvel
+            </li>
+            <li class="p-2 cursor-pointer hover:bg-blue-700 rounded-lg"
+                @onclick="@(() => NavigateTo("/categoria/Engenharia-de-Software"))">Engenharia de Software
+            </li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private bool menuAberto = false;
+
+    private void TrocarEstadoMenu()
+    {
+        menuAberto = !menuAberto;
+    }
+
+    private void NavigateTo(string url)
+    {
+        NavigationManager.NavigateTo(url);
+    }
+
+    private bool isLogado = true;
+}

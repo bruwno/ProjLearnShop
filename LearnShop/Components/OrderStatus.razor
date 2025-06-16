@@ -1,0 +1,17 @@
+@inherits ComponentBase
+
+<div>
+    <span class="@(Status.ToLower() == "cancelado" ? "bg-red-500" : "bg-green-500") 
+               text-white text-@TextSize text-center py-2 px-6 
+               rounded-full mb-4 font-bold">
+        Status: @Status
+    </span>
+</div>
+
+@code {
+    [Parameter]
+    public string Status { get; set; }
+
+    [Parameter]
+    public string TextSize { get; set; } = "sm";
+}

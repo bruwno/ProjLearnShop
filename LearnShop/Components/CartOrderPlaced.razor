@@ -1,0 +1,49 @@
+﻿<div class="w-full p-[1rem] gap-[1rem] flex flex-col">
+    <Stepper step="3" />
+    <div class="bg-white flex flex-col justify-center items-center p-[1rem] gap-[1rem]">
+        <div class="w-full flex flex-col justify-center items-center gap-[0.4rem] bg-gray-200 p-[1rem]">
+            <h1 class="bg-[#151773] W-full p-[1rem] text-[0.7rem] md:text-[1rem] text-white">PEDIDO REALIZADO COM SUCESSO!</h1>
+            <div class="flex flex-col items-center justify-center">
+                <p>NÚMERO DO PEDIDO</p>
+                <p class="font-bold text-[1.5rem]">@OrderNumber</p>
+            </div>
+        </div>
+        <div class="flex flex-row justify-center items-start gap-[0.4rem]">
+            <ProductImage
+                Image="@ProductImage" 
+                Alt="@ProductName"
+                Height="95px"
+                Width="90px"
+                ObjectContain="contain"
+            />
+            <h1 class="text-[2rem]">@ProductName</h1>
+        </div>
+        <p>@PaymentType</p>
+        
+    </div>
+    @* <div class=" flex justify-center items-center m-[0.5rem]">
+        <button class="bg-primary p-[0.8rem] rounded-[1rem] text-white w-full cursor-pointer">
+            Ir À Home
+        </button>
+    </div> *@
+</div>
+
+
+
+@code {
+    [Parameter]
+    public string ProductName { get; set; } = string.Empty;
+
+    [Parameter]
+    public string OrderNumber { get; set; } = string.Empty;
+
+    [Parameter]
+    public string PaymentType { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProductImage { get; set; } = string.Empty;
+
+    [Parameter]
+    public decimal ProductPrice { get; set; } = 0m;
+    
+}

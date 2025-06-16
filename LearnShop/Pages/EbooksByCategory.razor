@@ -1,0 +1,73 @@
+@page "/categoria/{categoryName}"
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Model.Products
+@inject IEbookService EbookService
+
+<PageTitle>@(categoryName?.ToUpper())</PageTitle>
+
+<PageHeader
+    Title="E-books por categoria"
+    TextSize="2xl"
+/>
+
+<div class="container px-3 py-4 mx-auto">
+    <div class="flex items-center justify-center m-6">
+        <h1 class="p-2 font-semibold text-white rounded-lg md:text-3xl sm:text-sm bg-gradient-to-br from-green-500 to-blue-600 border-b-3 border-b-primary border-t-3 border-t-highlight">
+            E-books sobre @categoryName.Replace("-", " ")
+        </h1>
+    </div>
+
+@if (isLoading)
+{
+    <Loading />
+}
+else if (filteredEbooks == null || !filteredEbooks.Any())
+{
+    <div class="py-8 text-center">
+        <p>Nenhum e-book encontrado para esta categoria.</p>
+    </div>
+}
+else
+{
+        <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-7 justify-items-center">
+            @foreach (var ebook in filteredEbooks) 
+            {
+                <a
+                    href="@($"/product?productTitle={Uri.EscapeDataString(ebook.Title)}&productCategory={Uri.EscapeDataString(ebook.Category)}&productDescription={Uri.EscapeDataString(ebook.Description)}&productPrice={ebook.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}&productImage={Uri.EscapeDataString(ebook.ImageUrl)}")"
+                    class="transition-shadow duration-300 ease-in-out">
+                    <ProductCard
+                        ProductTitle="@ebook.Title" 
+                        ProductDescription="@ebook.Description" 
+                        ProductImage="@ebook.ImageUrl" 
+                        Author="@ebook.Author" 
+                        Price="@ebook.Price" 
+                        Publisher="@ebook.Publisher"
+                        Category="@ebook.Category"
+                        TextColor="#000" 
+                    />
+                </a>
+            }
+        </div>
+}
+</div>
+
+@code {
+    [Parameter]
+    public string? categoryName { get; set; }
+
+    private List<Ebook>? filteredEbooks;
+    private bool isLoading = true;
+    protected override async Task OnParametersSetAsync()
+    {
+        isLoading = true;
+        if (string.IsNullOrWhiteSpace(categoryName))
+        {
+            filteredEbooks = new List<Ebook>();
+            isLoading = false;
+            return;
+        }
+
+        filteredEbooks = await EbookService.GetEbooksByCategoryAsync(categoryName);
+        isLoading = false;
+    }
+}

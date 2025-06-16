@@ -1,0 +1,31 @@
+@namespace LearnShop.Components
+<div class="flex flex-col w-full items-center mb-2">
+    <label for="@Id" class="text-black text-2lg font-bold mb-1">@Label</label>
+    <input 
+        type="@Type"
+        id="@Id"
+        value="@Value"
+        @oninput="@((e) => ValueChanged.InvokeAsync(e.Value?.ToString()))"
+        class="min-w-[20vw] md:min-w-[60vw] lg:min-w-[15vw] h-[40px] text-center border rounded-2xl bg-white text-black"
+        placeholder="@Placeholder" />
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Type { get; set; } = "text";
+
+    [Parameter]
+    public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Id { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+}

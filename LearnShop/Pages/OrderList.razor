@@ -1,0 +1,78 @@
+@page "/pedidos"
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Model
+@using LearnShop.Model.Sales
+@inject IOrderService OrderService
+@inject NavigationManager Nav
+
+<PageTitle>Pedidos</PageTitle>
+
+<PageHeader Title="MEUS PEDIDOS" TextSize="2xl" />
+
+<div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto">
+    @if (isLoading)
+    {
+        <Loading/>
+    }
+    else if (orders == null || !orders.Any())
+    {
+        <p>Nenhum pedido encontrado.</p>
+    }
+    else
+    {
+    <div class="flex flex-col items-center justify-center w-full p-5 m-1 font-bold text-black bg-white rounded-lg shadow-md space-y-4">
+            @foreach (var order in orders)
+            {
+                <div class="cursor-pointer border rounded-lg p-4 shadow-sm w-[80vw]  md:w-[50vw] bg-gradient-to-br from-blue-400 to-green-600"
+                    @onclick="GoToOrderDetails">
+                    <div class="flex justify-between items-center text-[0.9rem] md:text-[1.3rem]">
+                        <div>
+                            <h3 class="font-bold">Pedido: @order.Number - @order.Date.ToString("dd/MM/yyyy")</h3>
+                            @order.ProductName
+                        </div>
+                        <Button Text="Baixar PDF" 
+                                Icon="download" 
+                                TextColor="#FFF" 
+                                BackgroundColor="#151773"
+                                HoverBackgroundColor="#23238a" 
+                                Size="sm" 
+                                Width="min-w-[110px]"
+                                PreventDefaultStatus=true
+                                OnClick="@(()=>{})" />
+                </div>
+            </div>
+        }
+    </div>
+    <div class="mt-6">
+                        <Button Text="Ver mais" 
+                                Icon="arrow_drop_down" 
+                                TextColor="#FFF" 
+                                BackgroundColor="#151773"
+                                HoverBackgroundColor="#23238a" 
+                                Size="md" 
+                                Width="min-w-[125px]"
+                                PreventDefaultStatus=true
+                                OnClick="@(()=>{})" />
+    </div>
+}
+</div>
+
+@code {
+    private List<Order>? orders;
+    private bool isLoading = true;
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        orders = await OrderService.GetOrdersAsync();
+        isLoading = false;
+    }
+
+    private void GoToOrderDetails(){
+        Nav.NavigateTo("/detalhes-pedido");
+    }
+
+    private void NavigateTo(string url)
+    {
+        Nav.NavigateTo(url);
+    }
+}

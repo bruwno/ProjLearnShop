@@ -1,0 +1,26 @@
+@inherits ComponentBase
+
+<div class="flex items-center justify-center p-1 bg-transparent rounded-b-lg shadow-md ">
+    <img src="@Image" 
+        alt="@Alt"  
+        class="object-@ObjectContain" 
+        style="height:@(Height); width:@(Width); max-width:none;"
+    />
+</div>
+
+@code {
+    [Parameter]
+    public string Image { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Alt { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Width { get; set; } = "150px";
+
+    [Parameter]
+    public string Height { get; set; } = "150px";
+
+    [Parameter]
+    public string ObjectContain { get; set; } = "contain";
+}

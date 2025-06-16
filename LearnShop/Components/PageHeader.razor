@@ -1,0 +1,17 @@
+@inherits ComponentBase
+
+<div class="flex h-[5vh] w-full 
+            bg-gradient-to-br from-blue-600 via-blue-80 to-blue-900
+            items-center justify-center 
+            border-b-1 bg-[#151773] 
+            text-@(TextSize) font-bold">
+    <span class="text-white">@(Title)</span>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public string TextSize { get; set; } = "2xl";
+}

@@ -1,0 +1,51 @@
+﻿
+<div class="mt-4 mb-4 text-center">
+    <h2 class="text-xl font-bold">
+        @if (step == 1)
+        {
+            <text>RESUMO DO CARRINHO</text>
+        }
+        else if (step == 2)
+        {
+            <text>PAGAMENTO</text>
+        }
+        else if (step == 3)
+        {
+            <text>PEDIDO REALIZADO</text>
+        }
+    </h2>
+</div>
+
+
+<ol class="flex items-center w-full mb-3 text-sm font-medium text-center text-gray-500 sm:text-base">
+    <li class="flex items-center w-full">
+        <div class="flex items-center rounded-[5rem] @((step >= 1) ? "bg-green-400 text-white" : "bg-gray-400 text-black")">
+            <span class="material-icons text-2xl p-[1rem]">
+                shopping_cart
+            </span>
+        </div>
+        <div class="flex w-full h-1 @((step >= 2) ? "bg-green-400" : "bg-black")"></div>
+    </li>
+
+    <li class="flex items-center w-full">
+        <div class="flex items-center rounded-[5rem] @((step >= 2) ? "bg-green-400 text-white" : "bg-gray-400 text-black")">
+            <span class="material-icons text-2xl p-[1rem]">
+                attach_money
+            </span>
+        </div>
+        <div class="flex w-full h-1 @((step >= 3) ? "bg-green-400" : "bg-black")"></div>
+    </li>
+
+    <li class="flex items-center">
+        <div class="flex items-center rounded-[5rem] @((step >= 3) ? "bg-green-400 text-white" : "bg-gray-400 text-black")">
+            <span class="material-icons text-2xl p-[1rem]">
+                check
+            </span>
+        </div>
+    </li>
+</ol>
+
+@code {
+    [Parameter]
+    public int step { get; set; } = 1;
+}

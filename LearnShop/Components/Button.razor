@@ -1,0 +1,76 @@
+@inherits ComponentBase
+
+<button 
+    type="button"
+    class="@GetSize() flex items-center justify-center font-medium rounded-md 
+    transition-all duration-200 ease-in-out active:scale-95 active:shadow-inner @Width"
+    style="background-color:@BackgroundColor; color:@TextColor;"
+    @onmouseover="@OnMouseOver"
+    @onmouseout="@OnMouseOut"
+    @onclick="ButtonClicked"
+    @onclick:preventDefault="@PreventDefaultStatus">
+    
+    @if (!string.IsNullOrEmpty(Icon)) {
+        <span class="mr-1 material-icons">@Icon</span>
+    }
+    @Text
+</button>
+
+@code {
+    [Parameter] 
+    public string Text { get; set; } = string.Empty;
+
+    [Parameter] 
+    public string Icon { get; set; } = "";
+
+    [Parameter] 
+    public string TextColor { get; set; } = "#FFF";
+
+    [Parameter] 
+    public string BackgroundColor { get; set; } = "#151773";
+
+    [Parameter] 
+    public string HoverBackgroundColor { get; set; } = "#23238a";
+
+    [Parameter] 
+    public string Size { get; set; } = "md";
+
+    [Parameter]
+    public string Width { get; set; } = "min-w-md";
+
+    [Parameter]
+    public bool PreventDefaultStatus { get; set; } = true;
+
+    [Parameter] 
+    public EventCallback OnClick { get; set; }
+
+    private async Task ButtonClicked() 
+    {
+        await OnClick.InvokeAsync();
+    }
+
+    private void OnMouseOver() 
+    {
+        BackgroundColor = HoverBackgroundColor;
+    }
+
+    private void OnMouseOut() 
+    {
+        BackgroundColor = HoverBackgroundColor;
+    }
+
+    private string GetSize()
+    {
+        switch (Size.ToLower())
+        {
+            case "xs":
+                return "px-1 py-0.5 text-xs";
+            case "sm":
+                return "px-2 py-1 text-xs";
+            case "lg":
+                return "px-5 py-3 text-lg";
+            default:
+                return "px-3 py-2 text-sm";
+        }
+    }
+}

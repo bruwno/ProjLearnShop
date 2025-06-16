@@ -1,0 +1,99 @@
+﻿@inherits ComponentBase
+@using LearnShop.Components
+
+<div class="grid grid-rows-[auto_1fr_auto] gap-2 overflow-hidden 
+            border rounded-md shadow-md 
+            bg-gradient-to-br from-blue-400 to-green-600 
+            hover:shadow-2xl p-4
+            transition-transform transform hover:scale-102
+            min-w-fit max-w-fit
+            md:max-w-[400px] md:min-w-[350px]
+            min-h-fit max-h-fit
+            h-[570px]"
+     style="color: @(TextColor);">
+     
+    <div class="flex items-center justify-between pb-2 border-b">
+        <h2 class="text-xl font-bold text-primary">@ProductTitle</h2>
+        <p class="text-sm italic">@Author</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-4 py-4">
+        <div class="flex justify-center border-dashed rounded-sm border-1 bg-gradient-to-br from-green-600 to-blue-700">
+        <ProductImage 
+            Image="@ProductImage" 
+            Alt="@ProductTitle"
+            Height="290px"
+            Width="220px"
+            ObjectContain="contain"
+        />
+        </div>
+  
+        <div class="flex flex-col justify-between h-full">
+            <EbookInfo
+                ProductDescription="@ProductDescription"
+                Publisher="@Publisher"
+                Category="@Category" 
+                ProductDescriptionTextSize="sm"
+                LabelsTextSize="sm"
+                PublisherTextSize="sm"
+                CategoryTextSize="sm"
+            />
+        </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t">
+        <PriceTag 
+            PriceValue="@Price" 
+            TextSize="2xl"
+        />
+
+        <div class="flex">
+            <Button 
+                Text="Adicionar ao carrinho" 
+                Icon="add_shopping_cart" 
+                TextColor="#FFF"
+                BackgroundColor="#151773"
+                HoverBackgroundColor="#23238a"
+                Size="md"
+                Width="100px"
+                PreventDefaultStatus=true
+                OnClick="@(() => { AddToCart(); })"
+            />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string BorderColor { get; set; } = "#151773";
+
+    [Parameter]
+    public string TextColor { get; set; } = "#000";
+
+    [Parameter]
+    public string ProductTitle { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProductDescription { get; set; } = string.Empty;
+
+    [Parameter]
+    public string ProductImage { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Author { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Publisher { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Category { get; set; } = string.Empty;
+
+    [Parameter]
+    public decimal Price { get; set; } = 0.0m;
+
+    private void AddToCart() 
+    {
+        Console.WriteLine($"Adicionando {ProductTitle} ao carrinho.");
+    }
+
+}

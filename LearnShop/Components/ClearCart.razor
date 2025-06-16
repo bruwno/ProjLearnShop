@@ -1,0 +1,19 @@
+@inherits ComponentBase
+
+@using LearnShop.Components
+
+<div class="flex flex-col items-end justify-end w-full">
+    <Button
+        Text="Limpar carrinho"
+        Icon="remove_shopping_cart"
+        Width="md"
+        OnClick="ClearCartItems"
+    />
+</div>
+
+@code {
+    private void ClearCartItems() 
+    {
+        // Implementar a lógica de limpeza do carrinho na próxima etapa do trabalho.
+    }
+}

@@ -1,0 +1,65 @@
+﻿@page "/product"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Produto</PageTitle>
+
+<div class="bg-primary text-white h-[3rem] flex justify-center items-center md:hidden ">
+    HOME > @(productCategory)
+</div>
+<div class="flex flex-col w-full  p-[1rem]  h-screen justify-center items-center z-1 gap-[1rem]">
+    <h1
+        class="p-2 font-semibold text-white rounded-lg md:text-3xl sm:text-sm bg-gradient-to-br from-green-500 to-blue-600 border-b-3 border-b-primary border-t-3 border-t-highlight animate-bounce">
+        @(productTitle)
+    </h1>
+    <div class="w-full md:max-w-1/2 border flex justify-center bg-gradient-to-br from-green-600 to-blue-800">
+        <img class="max-w-56 bg-gradient-to-br from-green-600 to-blue-800" src=@(ProductImage) alt=""/>
+    </div>
+    <div class="flex flex-col items-center justify-center w-full md:max-w-1/2 max-h-1/2 p-[2rem] border text-[0.7rem] md:text-[1rem] text-white flex flex-col gap-[1rem] border rounded-md shadow-md bg-gradient-to-br from-blue-400 to-green-600 
+            hover:shadow-2xl p-4">
+        <p>@(productDescription)</p>
+        <div class="flex flex-col">
+            <PriceTag PriceValue=@(productPrice)/>
+            <p>À vista com 15% de desconto no boleto ou pix</p>
+        </div>
+        <div class="flex flex-row gap-[0.5rem]">
+            <p class="text-[1rem] material-icons">credit_card</p>
+            <p>ou até 3x no cartão</p>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t"></div>
+        <div class="flex gap-2 items-center justify-center">
+            <button
+                class="flex items-center px-3 py-1 text-sm font-medium text-white rounded-md bg-secondary hover:bg-secondary/80 cursor-pointer"
+                @onclick="@(() => { AddToCart(); })">
+                <span class="mr-1 text-sm material-icons">add_shopping_cart</span> Adicionar ao carrinho
+            </button>
+            <button
+                class="flex items-center px-3 py-1 text-sm font-medium text-white rounded-md bg-primary hover:bg-primary/80 cursor-pointer"
+                @onclick="@(() => { GoToCart(); })">
+                <span class="mr-1 text-sm material-icons">shopping_cart</span> Comprar agora
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] [SupplyParameterFromQuery] public string ProductImage { get; set; } = string.Empty;
+
+    [Parameter] [SupplyParameterFromQuery] public string productTitle { get; set; } = string.Empty;
+
+    [Parameter] [SupplyParameterFromQuery] public string productCategory { get; set; } = string.Empty;
+
+    [Parameter] [SupplyParameterFromQuery] public string productDescription { get; set; } = string.Empty;
+
+    [Parameter] [SupplyParameterFromQuery] public decimal productPrice { get; set; } = 0.0m;
+
+    private void AddToCart()
+    {
+        Console.WriteLine($"Adicionando {productTitle} ao carrinho.");
+    }
+
+    private void GoToCart()
+    {
+        NavigationManager.NavigateTo("/carrinho");
+    }
+
+}

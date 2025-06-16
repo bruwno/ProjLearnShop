@@ -1,0 +1,33 @@
+@inherits ComponentBase
+@inject NavigationManager NavigationManager
+
+<div class="p-[1rem] w-full bg-secondary">
+    <input
+        @bind="SearchText"
+        @bind:event="oninput"
+        type="text"
+        placeholder="Pesquisar e-books..."
+        class="text-center w-full p-[0.5rem] rounded-lg border bg-white border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#76be11]"
+        @onkeydown="HandleKeyDown"
+    />
+</div>
+
+@code {
+    private string SearchText { get; set; } = string.Empty;
+
+    private void Search() 
+    {
+        if (!string.IsNullOrWhiteSpace(SearchText)) 
+        {
+            NavigationManager.NavigateTo($"/busca?query={Uri.EscapeDataString(SearchText)}");
+        }
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e) 
+    {
+        if (e.Key == "Enter") 
+        {
+            Search();
+        }
+    }
+}

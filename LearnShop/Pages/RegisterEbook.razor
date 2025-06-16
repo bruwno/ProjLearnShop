@@ -1,0 +1,76 @@
+@page "/cadastrar/ebook"
+
+<PageTitle>Cadastrar E-book para venda</PageTitle>
+<PageHeader Title="CADASTRAR E-BOOK" TextSize="2xl" />
+
+<div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto h-full">
+    <div
+        class="flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-600 border rounded-2xl min-w-[90vw] min-h-[70vh] md:min-w-[50vw] lg:min-w-[35vw]">
+        <div class="flex flex-col justify-center rounded-2xl w-[80vw] min-h-[50vh] bg-white  md:w-[40vw] lg:w-[20vw]">
+            <Input Label="Título" Type="text" Id="title" @bind-Value="ebookName"
+                Placeholder="Digite o nome do E-book" />
+
+            <Input Label="Descrição" Type="text" Id="description" @bind-Value="ebookDescription"
+                Placeholder="Digite a descrição do E-book" />
+
+            <Input Label="Autor" Type="text" Id="author" @bind-Value="ebookAuthor"
+                Placeholder="Digite o autor do E-book" />
+
+            <Input Label="Categoria" Type="text" Id="category" @bind-Value="ebookCategory"
+                Placeholder="Digite a catergoria do E-book" />
+
+            <Input Label="Editora" Type="text" Id="publisher" @bind-Value="ebookPublisher"
+                Placeholder="Digite a editora do E-book" />
+
+            <Input Label="Preço" Type="number-pad" Id="price" @bind-Value="ebookPrice"
+                Placeholder="Digite o preço do E-book" />
+
+            <div class="flex flex-col items-start w-full px-4 mt-4">
+                <label class="text-sm font-medium text-gray-700 mb-2">Capa do E-book</label>
+
+                <div class="relative w-full">
+                    <InputFile OnChange="HandleFileSelected" class="absolute opacity-0 w-px h-px" id="fileInput"
+                        accept="image/*" />
+
+                    <label for="fileInput" class="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg 
+                      cursor-pointer hover:bg-blue-700 transition-colors duration-200 border border-blue-700">
+                        <span class="material-icons">cloud_upload</span>
+                        Escolher Arquivo
+                    </label>
+                    <span class="block mt-2 text-sm text-gray-600">
+                        @(selectedFileName ?? "Nenhum arquivo selecionado")
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center justify-center bg-transparent mt-5">
+            <Button Text="Cadastrar" Icon="add" TextColor="#FFF" BackgroundColor="#151773"
+                HoverBackgroundColor="#23238a" Size="md" Width="min-w-[125px]" PreventDefaultStatus=true
+                OnClick="@(() => { })" />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? ebookName;
+    private string? ebookDescription;
+    private string? ebookAuthor;
+    private string? ebookCategory;
+    private string? ebookPublisher;
+    private string? ebookPrice;
+
+    private string? selectedFileName;
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        if (e.FileCount > 0)
+        {
+            selectedFileName = e.File.Name;
+            //Implementar o tratamento dos arquivos na segunda parte do trabalho.
+        }
+        else
+        {
+            selectedFileName = null;
+        }
+    }
+}

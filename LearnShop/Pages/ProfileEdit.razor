@@ -1,0 +1,37 @@
+@page "/perfil/editar"
+
+<PageTitle>Editar perfil</PageTitle>
+<PageHeader Title="EDITAR PERFIL" TextSize="2xl" />
+
+<div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto h-full">
+    <div class="flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-600 border rounded-2xl min-w-[90vw] min-h-[70vh] md:min-w-[50vw] lg:min-w-[35vw]">
+    <div class="flex flex-col justify-center rounded-2xl w-[80vw] min-h-[50vh] bg-white  md:w-[40vw] lg:w-[20vw]">     
+    <Input Label="Nome" Type="text" Id="name" @bind-Value="userName" />
+
+    <Input Label="CPF" Type="number-pad" Id="cpf" @bind-Value="userCpf" />
+
+    <Input Label="E-mail" Type="email" Id="email" @bind-Value="userEmail"/>
+
+    <Input Label="Senha" Type="password" Id="password" @bind-Value="userPassword" />
+    </div>
+       
+    <div class="flex items-center justify-center bg-transparent mt-10">
+        <Button Text="Salvar" 
+            Icon="save" 
+            TextColor="#FFF" 
+            BackgroundColor="#151773"
+            HoverBackgroundColor="#23238a" 
+            Size="md" 
+            Width="min-w-[125px]"
+            PreventDefaultStatus=true
+            OnClick="@(()=>{})" />
+            </div>
+    </div>
+</div>
+
+@code {
+    private string? userName;
+    private string? userCpf;
+    private string? userEmail;
+    private string? userPassword;
+}
