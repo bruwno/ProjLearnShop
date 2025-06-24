@@ -7,12 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.12.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LearnShop.Configs\LearnShop.Configs.csproj" />
       <ProjectReference Include="..\LearnShop.Infra\LearnShop.Infra.csproj" />
       <ProjectReference Include="..\LearnShop.Model\LearnShop.Model.csproj" />
     </ItemGroup>

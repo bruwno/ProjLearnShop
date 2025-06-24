@@ -1,3 +1,5 @@
+using DotNetEnv;
+
 namespace LearnShop.Api;
 
 public class Program
@@ -6,6 +8,8 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        Env.Load();
+        
         // Add services to the container.
         builder.Services.AddAuthorization();
 
