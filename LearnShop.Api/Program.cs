@@ -1,4 +1,5 @@
 using DotNetEnv;
+using Scalar.AspNetCore;
 
 namespace LearnShop.Api;
 
@@ -22,6 +23,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
         app.UseHttpsRedirection();
