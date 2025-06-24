@@ -1,8 +1,7 @@
 namespace LearnShop.Model.Products;
 
-public class Ebook : IModel
+public class Ebook : BaseModel
 {
-    public long Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string ImageUrl { get; set; } = string.Empty;
