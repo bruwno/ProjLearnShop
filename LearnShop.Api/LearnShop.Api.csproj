@@ -23,8 +23,4 @@
       <ProjectReference Include="..\LearnShop.Model\LearnShop.Model.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Database\" />
-    </ItemGroup>
-
 </Project>

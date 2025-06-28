@@ -11,4 +11,8 @@
       <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.6" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LearnShop.Model\LearnShop.Model.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,6 @@
+using System.Data;
 using DotNetEnv;
+using Microsoft.Data.Sqlite;
 using Scalar.AspNetCore;
 
 namespace LearnShop.Api;
@@ -10,11 +12,14 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         Env.Load();
+        string connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING")!;
         
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        // Registrando a SQLite connection
+        builder.Services.AddSingleton<IDbConnection>(provider => new SqliteConnection(connectionString));
+        
         builder.Services.AddOpenApi();
 
         var app = builder.Build();

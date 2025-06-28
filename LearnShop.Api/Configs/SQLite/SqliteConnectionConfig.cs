@@ -5,6 +5,8 @@ namespace LearnShop.Api.Configs.SQLite;
 
 public static class SqliteConnectionConfig
 {
+    public static string ConnectionString { get; private set; } = string.Empty;
+
     public static void ConfigureSqlite(IServiceCollection services)
     {
         var baseConnectionString = Environment.GetEnvironmentVariable("SQLITE_CONNECTION_STRING");
@@ -15,12 +17,11 @@ public static class SqliteConnectionConfig
         
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
         var dbPath = Path.Combine(baseDir, "Database", "learnshop.db");
-        var connectionString =
-            baseConnectionString.Replace("Data Source=learnshop.db", $"Data Source={dbPath}");
+        ConnectionString = baseConnectionString.Replace("Data Source=learnshop.db", $"Data Source={dbPath}");
 
         services.AddScoped<IDbConnection>(serviceProvider =>
         {
-            var connection = new SqliteConnection(connectionString);
+            var connection = new SqliteConnection(ConnectionString);
             connection.Open();
             return connection;
         });
