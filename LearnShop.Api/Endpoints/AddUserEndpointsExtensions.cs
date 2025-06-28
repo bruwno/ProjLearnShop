@@ -41,7 +41,7 @@ public static class AddUserEndpointsExtensions
     {
         try
         {
-            var token = authService.AuthenticateAsync(loginDto);
+            var token = await authService.AuthenticateAsync(loginDto);
 
             if (token is null)
             {
