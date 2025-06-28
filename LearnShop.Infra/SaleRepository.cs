@@ -1,11 +1,11 @@
 using System.Data;
+using LearnShop.Infra.Interfaces;
 using LearnShop.Model.Sales;
 
-namespace LearnShop.Infra.Interfaces;
+namespace LearnShop.Infra;
 
 public class SaleRepository : BaseRepository, ISaleRepository
 {
-    
     public SaleRepository(IDbConnection connection) : base(connection)
     {
     }
@@ -15,7 +15,7 @@ public class SaleRepository : BaseRepository, ISaleRepository
         throw new NotImplementedException();
     }
 
-    public Task<Sale?> GetByIdAsync(Guid id)
+    public Task<Sale?> GetByIdAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -25,12 +25,12 @@ public class SaleRepository : BaseRepository, ISaleRepository
         throw new NotImplementedException();
     }
 
-    public Task<Sale?> UpdateAsync(Guid id, Sale entity)
+    public Task<Sale?> UpdateAsync(long id, Sale entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }

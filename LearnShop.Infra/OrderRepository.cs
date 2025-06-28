@@ -15,7 +15,7 @@ public class OrderRepository : BaseRepository, IOrderRepository
         throw new NotImplementedException();
     }
 
-    public Task<Order?> GetByIdAsync(Guid id)
+    public Task<Order?> GetByIdAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -25,12 +25,12 @@ public class OrderRepository : BaseRepository, IOrderRepository
         throw new NotImplementedException();
     }
 
-    public Task<Order?> UpdateAsync(Guid id, Order entity)
+    public Task<Order?> UpdateAsync(long id, Order entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }

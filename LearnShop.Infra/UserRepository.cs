@@ -20,7 +20,7 @@ public class UserRepository : BaseRepository, IUserRepository
         });
     }
 
-    public Task<User?> GetByIdAsync(Guid id)
+    public Task<User?> GetByIdAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -39,12 +39,12 @@ public class UserRepository : BaseRepository, IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<User?> UpdateAsync(Guid id, User entity)
+    public Task<User?> UpdateAsync(long id, User entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }

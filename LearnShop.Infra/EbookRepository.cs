@@ -15,7 +15,7 @@ public class EbookRepository : BaseRepository, IEbookRepository
         throw new NotImplementedException();
     }
 
-    public Task<Ebook?> GetByIdAsync(Guid id)
+    public Task<Ebook?> GetByIdAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -25,12 +25,12 @@ public class EbookRepository : BaseRepository, IEbookRepository
         throw new NotImplementedException();
     }
 
-    public Task<Ebook?> UpdateAsync(Guid id, Ebook entity)
+    public Task<Ebook?> UpdateAsync(long id, Ebook entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(Guid id)
+    public Task DeleteAsync(long id)
     {
         throw new NotImplementedException();
     }
