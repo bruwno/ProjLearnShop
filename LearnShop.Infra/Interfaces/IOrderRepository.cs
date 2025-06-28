@@ -1,6 +1,8 @@
+using LearnShop.Model.Sales;
+
 namespace LearnShop.Infra.Interfaces;
 
-public interface IOrderRepository
+public interface IOrderRepository : IGenericRepository<Order>
 {
     
 }

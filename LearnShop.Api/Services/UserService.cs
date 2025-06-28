@@ -1,10 +1,18 @@
 using LearnShop.Api.Services.Interfaces;
+using LearnShop.Infra.Interfaces;
 using LearnShop.Model.Users;
 
 namespace LearnShop.Api.Services;
 
 public class UserService : IUserService
 {
+    private readonly IUserRepository _userRepository;
+    
+    public UserService(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+    
     public Task<IEnumerable<User>> GetAllUsersAsync()
     {
         throw new NotImplementedException();
@@ -15,9 +23,14 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<User> GetUserByEmailAsync(string email)
+    public async Task<User?> GetUserByEmailAsync(string email)
     {
-        throw new NotImplementedException();
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return null;
+        }
+        
+        return await _userRepository.GetUserByEmail(email);
     }
 
     public Task<User> CreateUserAsync(User user)

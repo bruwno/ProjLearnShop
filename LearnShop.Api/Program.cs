@@ -1,6 +1,11 @@
-using System.Data;
 using DotNetEnv;
-using Microsoft.Data.Sqlite;
+using LearnShop.Api.Configs.Cors;
+using LearnShop.Api.Configs.SQLite;
+using LearnShop.Api.Endpoints;
+using LearnShop.Api.Services;
+using LearnShop.Api.Services.Interfaces;
+using LearnShop.Infra;
+using LearnShop.Infra.Interfaces;
 using Scalar.AspNetCore;
 
 namespace LearnShop.Api;
@@ -12,13 +17,17 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         Env.Load();
-        string connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING")!;
+        string connectionString = Environment.GetEnvironmentVariable("SQLITE_CONNECTION_STRING")!;
         
         // Add services to the container.
         builder.Services.AddAuthorization();
+        builder.Services.ConfigureCors();
 
         // Registrando a SQLite connection
-        builder.Services.AddSingleton<IDbConnection>(provider => new SqliteConnection(connectionString));
+        builder.Services.AddSqliteConfiguration();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
         
         builder.Services.AddOpenApi();
 
@@ -31,29 +40,10 @@ public class Program
             app.MapScalarApiReference();
         }
 
+        app.RegisterAllEndpoints();
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                        new WeatherForecast
-                        {
-                            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            TemperatureC = Random.Shared.Next(-20, 55),
-                            Summary = summaries[Random.Shared.Next(summaries.Length)]
-                        })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast");
-
+        
         app.Run();
     }
 }

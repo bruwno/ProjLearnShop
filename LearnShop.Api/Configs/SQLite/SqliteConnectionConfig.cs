@@ -7,7 +7,7 @@ public static class SqliteConnectionConfig
 {
     public static string ConnectionString { get; private set; } = string.Empty;
 
-    public static void ConfigureSqlite(IServiceCollection services)
+    public static IServiceCollection AddSqliteConfiguration(this IServiceCollection services)
     {
         var baseConnectionString = Environment.GetEnvironmentVariable("SQLITE_CONNECTION_STRING");
         if (string.IsNullOrEmpty(baseConnectionString))
@@ -17,7 +17,13 @@ public static class SqliteConnectionConfig
         
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
         var dbPath = Path.Combine(baseDir, "Database", "learnshop.db");
-        ConnectionString = baseConnectionString.Replace("Data Source=learnshop.db", $"Data Source={dbPath}");
+        ConnectionString = baseConnectionString.Replace("Data Source=Database/learnshop.db;", $"Data Source={dbPath};");
+        
+        var directory = Path.GetDirectoryName(dbPath);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory!);
+        }
 
         services.AddScoped<IDbConnection>(serviceProvider =>
         {
@@ -25,5 +31,7 @@ public static class SqliteConnectionConfig
             connection.Open();
             return connection;
         });
+
+        return services; 
     }
 }

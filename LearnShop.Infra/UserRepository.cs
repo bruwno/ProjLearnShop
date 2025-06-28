@@ -1,59 +1,50 @@
 using System.Data;
-using System.Data.Common;
+using Dapper;
 using LearnShop.Infra.Interfaces;
 using LearnShop.Model.Users;
 
 namespace LearnShop.Infra;
 
-public class UserRepository : BaseRepository<User>, IUserRepository
+public class UserRepository : BaseRepository, IUserRepository
 { 
-    protected override string TableName => "users";
-
-    public UserRepository(DbConnection dbConnection) : base(dbConnection)
+    public UserRepository(IDbConnection dbConnection) : base(dbConnection)
     {
+    }
+
+    public async Task<IEnumerable<User?>> GetAllAsync()
+    {
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "SELECT * FROM Users";
+            return await connection.QueryAsync<User>(sql);
+        });
+    }
+
+    public Task<User?> GetByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<User?> GetUserByEmail(string email)
+    {
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "SELECT * FROM Users WHERE Email = @Email";
+            return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Email = email });
+        });
     }
     
-    public Task<IEnumerable<User?>> GetAllAsync()
+    public Task<User?> InsertAsync(User entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetByIdAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public Task<User> GetUserByEmailAsync(string email)
+    public Task<User?> UpdateAsync(Guid id, User entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<User> CreateUserAsync(User user)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<User> UpdateUserAsync(Guid id, User user)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteUserAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
-    
-    public Task InsertAsync(User obj)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateAsync(User obj)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(long id)
+    public Task DeleteAsync(Guid id)
     {
         throw new NotImplementedException();
     }
