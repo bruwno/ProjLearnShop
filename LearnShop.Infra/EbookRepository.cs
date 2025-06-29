@@ -15,7 +15,8 @@ public class EbookRepository : BaseRepository, IEbookRepository
     {
         return await ExecuteWithConnectionAsync(async connection =>
         {
-            const string sql = "SELECT * FROM ebooks";
+            const string sql = "SELECT id, title, description, image_url AS ImageUrl, author, publisher, category, price " +
+                               "FROM ebooks";
             return await connection.QueryAsync<Ebook>(sql);
         });
     }
@@ -24,7 +25,8 @@ public class EbookRepository : BaseRepository, IEbookRepository
     {
         return await ExecuteWithConnectionAsync(async connection =>
         {
-            const string sql = "SELECT * FROM ebooks WHERE Id = @Id";
+            const string sql = "SELECT id, title, description, image_url AS ImageUrl, author, publisher, category, price " +
+                               "FROM ebooks WHERE Id = @Id";
             return await connection.QueryFirstOrDefaultAsync<Ebook>(sql, new { Id = id });
         });
     }
