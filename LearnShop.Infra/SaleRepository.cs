@@ -16,9 +16,9 @@ public class SaleRepository : BaseRepository, ISaleRepository
         return await ExecuteWithConnectionAsync(async connection =>
         {
             const string sql = @"SELECT id, 
-                                        order_id, 
-                                        total_price, 
-                                        sale_date
+                                        order_id AS OrderId, 
+                                        total_price AS TotalPrice, 
+                                        sale_date AS SaleDate
                                  FROM sales";
 
             return await connection.QueryAsync<Sale>(sql);
@@ -30,9 +30,9 @@ public class SaleRepository : BaseRepository, ISaleRepository
         return await ExecuteWithConnectionAsync(async connection =>
         {
             const string sql = @"SELECT id, 
-                                        order_id, 
-                                        total_price, 
-                                        sale_date
+                                        order_id AS OrderId, 
+                                        total_price AS TotalPrice, 
+                                        sale_date AS SaleDate
                                 FROM sales WHERE id = @Id";
             return await connection.QueryFirstOrDefaultAsync<Sale>(sql, new { Id = id });
         });
@@ -48,7 +48,7 @@ public class SaleRepository : BaseRepository, ISaleRepository
                 VALUES 
                     (@Id, @SaleId, @TotalPrice, @SaleDate)
                 RETURNING
-                    id, order_id, total_price, sale_date";
+                    id, order_id AS OrderId, total_price AS TotalPrice, sale_date AS SaleDate";
 
             var parameters = new
             {
@@ -74,7 +74,7 @@ public class SaleRepository : BaseRepository, ISaleRepository
                     sale_date = @SaleDate
                 WHERE id = @Id
                 RETURNING 
-                    id, order_id, total_price, sale_date";
+                    id, order_id AS OrderId, total_price AS TotalPrice, sale_date AS SaleDate";
 
             var parameters = new
             {
