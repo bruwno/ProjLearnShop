@@ -16,16 +16,16 @@ public class UserMapper
             Role = userCreateRequestDto.Role
         };
 
-        user.SetPassword(userCreateRequestDto.Password);
+        user.SetPassword(userCreateRequestDto.PasswordHash);
         return user;
     }
     
     public static void UpdateEntity(User user, UserUpdateRequestDto userUpdateRequestDto)
     {
         user.FullName = userUpdateRequestDto.FullName ?? user.FullName;
-        user.Cpf = userUpdateRequestDto.Cpf;
-        user.Email = userUpdateRequestDto.Email;
-        user.Role = userUpdateRequestDto.Role;
+        user.Cpf = userUpdateRequestDto.Cpf ?? user.Cpf;
+        user.Email = userUpdateRequestDto.Email ?? user.Email;
+        user.Role = userUpdateRequestDto.Role ?? user.Role;
 
         if (!string.IsNullOrWhiteSpace(userUpdateRequestDto.Password))
         {

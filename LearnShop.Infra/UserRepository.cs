@@ -45,15 +45,15 @@ public class UserRepository : BaseRepository, IUserRepository
             const string sql = @"
                 INSERT INTO Users (full_name, email, password_hash, cpf, role)
                 VALUES (@FullName, @Email, @PasswordHash, @Cpf, @Role)
-                RETURNING id, full_name, email, role;
+                RETURNING id, full_name AS FullName, email, password_hash as PasswordHash, cpf, role;
                 ";
 
             var parameters = new
             {
                 user.FullName,
-                user.Cpf,
                 user.Email,
                 user.PasswordHash,
+                user.Cpf,
                 Role = user.Role.ToString().ToLower()
             };
 
@@ -75,7 +75,7 @@ public class UserRepository : BaseRepository, IUserRepository
                     cpf = @Cpf, 
                     role = @Role
                 WHERE id = @Id
-                RETURNING id, full_name, email, role;
+                RETURNING id, full_name AS FullName, cpf, password_hash AS PasswordHash, email, role;
             ";
 
             var parameters = new

@@ -20,4 +20,10 @@
       <Folder Include="Database\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Database\learnshop.db">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

@@ -10,6 +10,6 @@ public interface IUserService
     Task<User> GetUserByIdAsync(long id);
     Task<User?> GetUserByEmailAsync(string email);
     Task<UserResponseDto?> CreateUserAsync(UserCreateRequestDto user);
-    Task<UserResponseDto> UpdateUserAsync(long id, UserUpdateRequestDto user);
+    Task<UserResponseDto?> UpdateUserAsync(long id, UserUpdateRequestDto user);
     Task DeleteUserAsync(long id);
 }
