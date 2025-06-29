@@ -45,7 +45,7 @@ public class UserRepository : BaseRepository, IUserRepository
             const string sql = @"
                 INSERT INTO Users (full_name, email, password_hash, cpf, role)
                 VALUES (@FullName, @Email, @PasswordHash, @Cpf, @Role)
-                RETURNING id, full_name AS FullName, email, password_hash as PasswordHash, cpf, role;
+                RETURNING id, full_name AS FullName, email, password_hash AS PasswordHash, cpf, role;
                 ";
 
             var parameters = new
@@ -58,7 +58,6 @@ public class UserRepository : BaseRepository, IUserRepository
             };
 
             var newUser = await connection.QuerySingleOrDefaultAsync<User>(sql, parameters);
-
             return newUser;
         });
     }

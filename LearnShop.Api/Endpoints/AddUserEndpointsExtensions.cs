@@ -1,5 +1,6 @@
 using LearnShop.Api.Services.Interfaces;
 using LearnShop.Dto.RequestDtos;
+using LearnShop.Dto.ResponseDtos;
 using LearnShop.Mappers;
 using LearnShop.Model.Users;
 
@@ -15,6 +16,7 @@ public static class AddUserEndpointsExtensions
         users.MapPost("/login", Login);
         users.MapPost("/cadastro", RegisterUser);
         users.MapPut("/{id:long}", UpdateUser);
+        users.MapGet("/users", GetAllUsers);
     }
 
     private static async Task<IResult> GetUserByEmail(string email, IUserService userService)
@@ -105,6 +107,19 @@ public static class AddUserEndpointsExtensions
         catch (Exception ex)
         {
             return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
+        }
+    }
+    
+    private static async Task<IEnumerable<UserResponseDto>> GetAllUsers(IUserService userService)
+    {
+        try
+        {
+            var users = await userService.GetAllUsersAsync();
+            return users.Select(UserMapper.ToResponseDto);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Ocorreu um erro ao obter os usuários: {ex.Message}");
         }
     }
 }

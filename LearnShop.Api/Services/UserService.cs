@@ -18,7 +18,7 @@ public class UserService : IUserService
     
     public Task<IEnumerable<User>> GetAllUsersAsync()
     {
-        throw new NotImplementedException();
+        return _userRepository.GetAllAsync();
     }
 
     public Task<User> GetUserByIdAsync(long id)
