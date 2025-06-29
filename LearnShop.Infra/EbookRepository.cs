@@ -1,4 +1,5 @@
 using System.Data;
+using Dapper;
 using LearnShop.Infra.Interfaces;
 using LearnShop.Model.Products;
 
@@ -10,28 +11,82 @@ public class EbookRepository : BaseRepository, IEbookRepository
     {
     }
 
-    public Task<IEnumerable<Ebook?>> GetAllAsync()
+    public async Task<IEnumerable<Ebook?>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "SELECT * FROM ebooks";
+            return await connection.QueryAsync<Ebook>(sql);
+        });
     }
 
-    public Task<Ebook?> GetByIdAsync(long id)
+    public async Task<Ebook?> GetByIdAsync(long id)
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "SELECT * FROM ebooks WHERE Id = @Id";
+            return await connection.QueryFirstOrDefaultAsync<Ebook>(sql, new { Id = id });
+        });
     }
 
-    public Task<Ebook?> InsertAsync(Ebook entity)
+    public async Task<Ebook?> InsertAsync(Ebook entity)
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = @"
+                INSERT INTO ebooks(title, description, image_url, author, publisher, category, price)
+                VALUES (@Title, @Description, @ImageUrl, @Author, @Publisher, @Category, @Price);
+                SELECT * FROM ebooks WHERE Id = LAST_INSERT_ID();";
+
+            return await connection.QueryFirstOrDefaultAsync<Ebook>(sql, new
+            {
+                entity.Title,
+                entity.Description,
+                entity.ImageUrl,
+                entity.Author,
+                entity.Publisher,
+                entity.Category,
+                entity.Price
+            });
+        });
     }
 
-    public Task<Ebook?> UpdateAsync(long id, Ebook entity)
+    public async Task<Ebook?> UpdateAsync(long id, Ebook entity)
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = @"
+                UPDATE ebooks
+                SET title = @Title,
+                    description = @Description,
+                    image_url = @ImageUrl,
+                    author = @Author,
+                    publisher = @Publisher,
+                    category = @Category,
+                    price = @Price
+                WHERE Id = @Id;
+                SELECT * FROM ebooks WHERE Id = @Id;";
+
+            return await connection.QueryFirstOrDefaultAsync<Ebook>(sql, new
+            {
+                Id = id,
+                entity.Title,
+                entity.Description,
+                entity.ImageUrl,
+                entity.Author,
+                entity.Publisher,
+                entity.Category,
+                entity.Price
+            });
+        });
     }
 
-    public Task DeleteAsync(long id)
+    public async Task DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "DELETE FROM ebooks WHERE Id = @Id";
+            await connection.ExecuteAsync(sql, new { Id = id });
+        });
     }
 }

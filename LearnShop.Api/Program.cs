@@ -32,6 +32,8 @@ public class Program
         builder.Services.AddScoped<ISaleService, SaleService>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
         builder.Services.AddScoped<IOrderService, OrderService>();
+        builder.Services.AddScoped<IEbookRepository, EbookRepository>();
+        builder.Services.AddScoped<IEbookService, EbookService>();
         
         builder.Services.AddOpenApi();
 
