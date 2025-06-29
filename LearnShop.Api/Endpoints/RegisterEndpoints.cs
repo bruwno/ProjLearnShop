@@ -10,5 +10,6 @@ public static class RegisterEndpoints
         app.AddUserEndpoints();
         app.AddSaleEndpoints();
         app.AddOrderEndpoints();
+        app.AddEbookEndpoints();
     }
 }

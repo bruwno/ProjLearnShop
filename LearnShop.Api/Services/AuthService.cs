@@ -39,7 +39,7 @@ public class AuthService : IAuthService
     private static SigningCredentials GetCredentials()
     {
         SymmetricSecurityKey key =
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET_KEY")!));
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_PRIVATE_KEY")!));
         return new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
     }
 
