@@ -1,5 +1,8 @@
 using LearnShop.Api.Services.Interfaces;
 using LearnShop.Infra.Interfaces;
+using LearnShop.Mappers;
+using LearnShop.Dto.RequestDtos;
+using LearnShop.Dto.ResponseDtos;
 using LearnShop.Model.Users;
 
 namespace LearnShop.Api.Services;
@@ -18,7 +21,7 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<User> GetUserByIdAsync(Guid id)
+    public Task<User> GetUserByIdAsync(long id)
     {
         throw new NotImplementedException();
     }
@@ -33,17 +36,25 @@ public class UserService : IUserService
         return await _userRepository.GetUserByEmail(email);
     }
 
-    public Task<User> CreateUserAsync(User user)
+    public async Task<UserResponseDto> CreateUserAsync(UserCreateRequestDto usercreateRequestDto)
     {
-        throw new NotImplementedException();
+        var userRequestDto = UserMapper.ToEntity(usercreateRequestDto);
+        var createdUser = await _userRepository.InsertAsync(userRequestDto);
+        var userResponseDto = UserMapper.ToResponseDto(createdUser);
+        return userResponseDto;
     }
 
-    public Task<User> UpdateUserAsync(Guid id, User user)
+    public async Task<UserResponseDto> UpdateUserAsync(long id, UserUpdateRequestDto userUpdateRequestDto)
     {
-        throw new NotImplementedException();
+        var existingUser = await _userRepository.GetByIdAsync(id);
+        if(existingUser == null)
+            throw new Exception("Usuário não encontrado.");
+        
+        var updatedUser = await _userRepository.UpdateAsync(id, existingUser);
+        return UserMapper.ToResponseDto(updatedUser);
     }
 
-    public Task DeleteUserAsync(Guid id)
+    public Task DeleteUserAsync(long id)
     {
         throw new NotImplementedException();
     }

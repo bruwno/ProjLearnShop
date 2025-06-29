@@ -20,9 +20,13 @@ public class UserRepository : BaseRepository, IUserRepository
         });
     }
 
-    public Task<User?> GetByIdAsync(long id)
+    public async Task<User?> GetByIdAsync(long id)
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "SELECT * FROM Users WHERE Id = @Id";
+            return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Id = id });
+        });
     }
 
     public async Task<User?> GetUserByEmail(string email)
@@ -34,14 +38,59 @@ public class UserRepository : BaseRepository, IUserRepository
         });
     }
     
-    public Task<User?> InsertAsync(User entity)
+    public async Task<User?> InsertAsync(User user)
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = @"
+                INSERT INTO Users (full_name, email, password_hash, cpf, role)
+                VALUES (@FullName, @Email, @PasswordHash, @Cpf, @Role)
+                RETURNING id, full_name, email, role;
+                ";
+
+            var parameters = new
+            {
+                user.FullName,
+                user.Cpf,
+                user.Email,
+                user.PasswordHash,
+                Role = user.Role.ToString().ToLower()
+            };
+
+            var newUser = await connection.QuerySingleOrDefaultAsync<User>(sql, parameters);
+
+            return newUser;
+        });
     }
 
-    public Task<User?> UpdateAsync(long id, User entity)
+    public async Task<User?> UpdateAsync(long id, User user)
     {
-        throw new NotImplementedException();
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = @"
+                UPDATE Users 
+                SET full_name = @FullName, 
+                    email = @Email, 
+                    password_hash = @PasswordHash, 
+                    cpf = @Cpf, 
+                    role = @Role
+                WHERE id = @Id
+                RETURNING id, full_name, email, role;
+            ";
+
+            var parameters = new
+            {
+                Id = id,
+                user.FullName,
+                user.Cpf,
+                user.Email,
+                user.PasswordHash,
+                Role = user.Role.ToString().ToLower()
+            };
+
+            var updatedUser = await connection.QuerySingleOrDefaultAsync<User>(sql, parameters);
+            return updatedUser;
+        });
     }
 
     public Task DeleteAsync(long id)

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="ResponseDtos\" />
+      <ProjectReference Include="..\LearnShop.Model\LearnShop.Model.csproj" />
     </ItemGroup>
 
 </Project>
