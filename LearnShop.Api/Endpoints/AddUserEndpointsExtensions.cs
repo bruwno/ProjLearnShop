@@ -16,8 +16,9 @@ public static class AddUserEndpointsExtensions
         users.MapPost("/login", Login);
         users.MapPost("/register", RegisterUser);
         users.MapPut("/{id:long}", UpdateUser);
-        users.MapGet("/users", GetAllUsers);
-        users.MapGet("/users/{id:long}", GetUserById);
+        users.MapGet("/", GetAllUsers);
+        users.MapGet("/{id:long}", GetUserById);
+        users.MapPost("/users/{id:long}/delete", DeleteUser);
     }
 
     private static async Task<IResult> GetUserByEmail(string email, IUserService userService)
