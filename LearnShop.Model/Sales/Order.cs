@@ -5,11 +5,8 @@ namespace LearnShop.Model.Sales;
 
 public class Order : BaseModel
 {
-    public Customer Customer { get; set; }
-    public List<Ebook> Items { get; set; } = new List<Ebook>();
-    public int Number { get; set; }
-    public DateTime Date { get; set; }
-    public string ProductName { get; set; } = string.Empty;
-    public string DownloadUrl { get; set; } = string.Empty;
+    public long CustomerId { get; set; }
+    public OrderItem OrderItem { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public decimal TotalPrice { get; set; } = 0.0m;
 }
