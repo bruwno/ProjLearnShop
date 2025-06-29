@@ -35,8 +35,8 @@ public class EbookRepository : BaseRepository, IEbookRepository
         {
             const string sql = @"
                 INSERT INTO ebooks(title, description, image_url, author, publisher, category, price)
-                VALUES (@Title, @Description, @ImageUrl, @Author, @Publisher, @Category, @Price);
-                SELECT * FROM ebooks WHERE Id = LAST_INSERT_ID();";
+                VALUES (@Title, @Description, @ImageUrl, @Author, @Publisher, @Category, @Price)
+                RETURNING id, title, description, image_url AS ImageUrl, author, publisher, category, price";
 
             return await connection.QueryFirstOrDefaultAsync<Ebook>(sql, new
             {
