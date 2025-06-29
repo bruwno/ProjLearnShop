@@ -23,7 +23,12 @@ public class UserService : IUserService
 
     public Task<User> GetUserByIdAsync(long id)
     {
-        throw new NotImplementedException();
+        if (id <= 0)
+        {
+            throw new ArgumentException("ID inválido.", nameof(id));
+        }
+        
+        return _userRepository.GetByIdAsync(id);
     }
 
     public async Task<User?> GetUserByEmailAsync(string email)
@@ -56,6 +61,6 @@ public class UserService : IUserService
 
     public Task DeleteUserAsync(long id)
     {
-        throw new NotImplementedException();
+        return _userRepository.DeleteAsync(id);
     }
 }

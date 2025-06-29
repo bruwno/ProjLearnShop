@@ -15,7 +15,14 @@ public class UserRepository : BaseRepository, IUserRepository
     {
         return await ExecuteWithConnectionAsync(async connection =>
         {
-            const string sql = "SELECT * FROM Users";
+            const string sql = @"
+            SELECT id, 
+                   full_name AS FullName, 
+                   email, 
+                   password_hash AS PasswordHash, 
+                   cpf, 
+                   role 
+            FROM Users";
             return await connection.QueryAsync<User>(sql);
         });
     }
@@ -24,7 +31,15 @@ public class UserRepository : BaseRepository, IUserRepository
     {
         return await ExecuteWithConnectionAsync(async connection =>
         {
-            const string sql = "SELECT * FROM Users WHERE Id = @Id";
+            const string sql = @"
+            SELECT id, 
+                   full_name AS FullName, 
+                   email, 
+                   password_hash AS PasswordHash, 
+                   cpf, 
+                   role 
+            FROM Users 
+            WHERE Id = @Id";
             return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Id = id });
         });
     }
@@ -33,7 +48,15 @@ public class UserRepository : BaseRepository, IUserRepository
     {
         return await ExecuteWithConnectionAsync(async connection =>
         {
-            const string sql = "SELECT * FROM Users WHERE Email = @Email";
+            const string sql = @"
+            SELECT id, 
+                   full_name AS FullName, 
+                   email, 
+                   password_hash AS PasswordHash, 
+                   cpf, 
+                   role 
+            FROM Users 
+            WHERE Email = @Email";
             return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Email = email });
         });
     }
@@ -92,8 +115,12 @@ public class UserRepository : BaseRepository, IUserRepository
         });
     }
 
-    public Task DeleteAsync(long id)
+    public async Task DeleteAsync(long id)
     {
-        throw new NotImplementedException();
+        await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = "DELETE FROM Users WHERE Id = @Id";
+            await connection.ExecuteAsync(sql, new { Id = id });
+        });
     }
 }

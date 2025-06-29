@@ -14,9 +14,10 @@ public static class AddUserEndpointsExtensions
 
         users.MapGet("/email/{email}", GetUserByEmail);
         users.MapPost("/login", Login);
-        users.MapPost("/cadastro", RegisterUser);
+        users.MapPost("/register", RegisterUser);
         users.MapPut("/{id:long}", UpdateUser);
         users.MapGet("/users", GetAllUsers);
+        users.MapGet("/users/{id:long}", GetUserById);
     }
 
     private static async Task<IResult> GetUserByEmail(string email, IUserService userService)
@@ -120,6 +121,38 @@ public static class AddUserEndpointsExtensions
         catch (Exception ex)
         {
             throw new Exception($"Ocorreu um erro ao obter os usuários: {ex.Message}");
+        }
+    }
+    
+    private static async Task<IResult> GetUserById(long id, IUserService userService)
+    {
+        try
+        {
+            var user = await userService.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return TypedResults.NotFound($"Usuário com ID {id} não encontrado.");
+            }
+
+            return TypedResults.Ok(UserMapper.ToResponseDto(user));
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
+        }
+    }
+    
+    private static async Task<IResult> DeleteUser(long id, IUserService userService)
+    {
+        try
+        {
+            await userService.DeleteUserAsync(id);
+            return TypedResults.NoContent();
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
         }
     }
 }
