@@ -30,16 +30,6 @@ public class OrderService : IOrderService
         {
             throw new ArgumentNullException(nameof(order), "O pedido não pode ser nulo");
         }
-          
-        if (order.Customer == null)
-        {
-            throw new ArgumentException("O pedido deve ter um cliente associado", nameof(order));
-        }
-        
-        if (order.Customer.Id <= 0)
-        {
-            throw new ArgumentException("O ID do cliente deve ser maior que zero", nameof(order));
-        }
         
         if (order.Items == null || !order.Items.Any())
         {
@@ -49,21 +39,6 @@ public class OrderService : IOrderService
         if (order.TotalPrice <= 0)
         {
             throw new ArgumentException("O valor total do pedido deve ser maior que zero", nameof(order));
-        }
-        
-        if (order.Date > DateTime.Now)
-        {
-            throw new ArgumentException("A data do pedido não pode ser futura", nameof(order));
-        }
-        
-        if (string.IsNullOrWhiteSpace(order.ProductName))
-        {
-            throw new ArgumentException("O nome do produto não pode estar vazio", nameof(order));
-        }
-        
-        if (string.IsNullOrWhiteSpace(order.DownloadUrl))
-        {
-            throw new ArgumentException("A URL de download não pode estar vazia", nameof(order));
         }
         
         return await _orderRepository.InsertAsync(order);
@@ -81,16 +56,6 @@ public class OrderService : IOrderService
             throw new ArgumentException("O ID do pedido deve ser maior que zero para atualização", nameof(order));
         }
         
-        if (order.Customer == null)
-        {
-            throw new ArgumentException("O pedido deve ter um cliente associado", nameof(order));
-        }
-        
-        if (order.Customer.Id <= 0)
-        {
-            throw new ArgumentException("O ID do cliente deve ser maior que zero", nameof(order));
-        }
-        
         if (order.Items == null || !order.Items.Any())
         {
             throw new ArgumentException("O pedido deve conter pelo menos um item", nameof(order));
@@ -101,21 +66,6 @@ public class OrderService : IOrderService
             throw new ArgumentException("O valor total do pedido deve ser maior que zero", nameof(order));
         }
         
-        if (order.Date > DateTime.Now)
-        {
-            throw new ArgumentException("A data do pedido não pode ser futura", nameof(order));
-        }
-        
-        if (string.IsNullOrWhiteSpace(order.ProductName))
-        {
-            throw new ArgumentException("O nome do produto não pode estar vazio", nameof(order));
-        }
-        
-        if (string.IsNullOrWhiteSpace(order.DownloadUrl))
-        {
-            throw new ArgumentException("A URL de download não pode estar vazia", nameof(order));
-        }
-
         return await _orderRepository.UpdateAsync(id, order);
     }
 
