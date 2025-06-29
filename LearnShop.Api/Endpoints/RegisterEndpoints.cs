@@ -8,5 +8,6 @@ public static class RegisterEndpoints
     public static void RegisterAllEndpoints(this WebApplication app)
     {
         app.AddUserEndpoints();
+        app.AddSaleEndpoints();
     }
 }

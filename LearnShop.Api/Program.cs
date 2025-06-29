@@ -28,6 +28,8 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+        builder.Services.AddScoped<ISaleService, SaleService>();
         
         builder.Services.AddOpenApi();
 

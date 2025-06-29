@@ -15,4 +15,10 @@
       <ProjectReference Include="..\LearnShop.Model\LearnShop.Model.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Database\learnshop.db">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
