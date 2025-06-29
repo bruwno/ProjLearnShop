@@ -16,10 +16,7 @@ public class SaleRepository : BaseRepository, ISaleRepository
         return await ExecuteWithConnectionAsync(async connection =>
         {
             const string sql = @"SELECT id, 
-                                        sale_id, 
-                                        product_id, 
-                                        customer_id, 
-                                        quantity, 
+                                        order_id, 
                                         total_price, 
                                         sale_date
                                  FROM sales";
@@ -32,7 +29,11 @@ public class SaleRepository : BaseRepository, ISaleRepository
     {
         return await ExecuteWithConnectionAsync(async connection =>
         {
-            const string sql = "SELECT * FROM sales WHERE id = @Id";
+            const string sql = @"SELECT id, 
+                                        order_id, 
+                                        total_price, 
+                                        sale_date
+                                FROM sales WHERE id = @Id";
             return await connection.QueryFirstOrDefaultAsync<Sale>(sql, new { Id = id });
         });
     }
@@ -43,19 +44,16 @@ public class SaleRepository : BaseRepository, ISaleRepository
         {
             const string sql = @"
                 INSERT INTO sales 
-                    (id, sale_id, product_id, customer_id, quantity, total_price, sale_date)
+                    (id, order_id, total_price, sale_date)
                 VALUES 
-                    (@Id, @SaleId, @ProductId, @CustomerId, @Quantity, @TotalPrice, @SaleDate)
+                    (@Id, @SaleId, @TotalPrice, @SaleDate)
                 RETURNING
-                    id, sale_id, product_id, customer_id, quantity, total_price, sale_date";
+                    id, order_id, total_price, sale_date";
 
             var parameters = new
             {
                 sale.Id,
-                sale.SaleId,
-                sale.ProductId,
-                sale.CustomerId,
-                sale.Quantity,
+                sale.OrderId,
                 sale.TotalPrice,
                 sale.SaleDate
             };
@@ -71,22 +69,16 @@ public class SaleRepository : BaseRepository, ISaleRepository
         {
             const string sql = @"
                 UPDATE sales 
-                SET sale_id = @SaleId,
-                    product_id = @ProductId,
-                    customer_id = @CustomerId,
-                    quantity = @Quantity,
-                    total_price = @TotalPrice,
+                SET order_id = @OrderId, 
+                    total_price = @TotalPrice, 
                     sale_date = @SaleDate
                 WHERE id = @Id
                 RETURNING 
-                    id, sale_id, product_id, customer_id, quantity, total_price, sale_date";
+                    id, order_id, total_price, sale_date";
 
             var parameters = new
             {
-                sale.SaleId,
-                sale.ProductId,
-                sale.CustomerId,
-                sale.Quantity,
+                sale.OrderId,
                 sale.TotalPrice,
                 sale.SaleDate,
                 Id = id
