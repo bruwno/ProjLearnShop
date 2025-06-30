@@ -1,11 +1,22 @@
 @page "/cadastrar/usuario"
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Dto.RequestDtos
+@using LearnShop.Model.Enums
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Cadastrar Usuário</PageTitle>
 <PageHeader Title="CADASTRAR USUÁRIO" TextSize="2xl" />
 
 <div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto h-full">
     <div class="flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-600 border rounded-2xl min-w-[90vw] min-h-[70vh] md:min-w-[50vw] lg:min-w-[35vw]">
-        <div class="flex flex-col justify-center rounded-2xl w-[80vw] min-h-[50vh] bg-white  md:w-[40vw] lg:w-[20vw]">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline">@errorMessage</span>
+            </div>
+        }
+        <div class="flex flex-col justify-center rounded-2xl w-[80vw] min-h-[50vh] bg-white md:w-[40vw] lg:w-[20vw]">
             <Input Label="Nome" Type="text" Id="name" @bind-Value="userName" Placeholder="Digite seu nome" />
 
             <Input Label="CPF" Type="number-pad" Id="cpf" @bind-Value="userCpf" Placeholder="Digite seu CPF" />
@@ -15,17 +26,17 @@
             <Input Label="Senha" Type="password" Id="password" @bind-Value="userPassword"
                 Placeholder="Digite sua senha" />
         </div>
-            <div class="flex items-center justify-center bg-transparent mt-10">
-                        <Button Text="Cadastrar" 
-                                Icon="person_add" 
-                                TextColor="#FFF" 
-                                BackgroundColor="#151773"
-                                HoverBackgroundColor="#23238a" 
-                                Size="md" 
-                                Width="min-w-[125px]"
-                                PreventDefaultStatus=true
-                                OnClick="@(()=>{})" />
-            </div>
+        <div class="flex items-center justify-center bg-transparent mt-10">
+            <Button Text="Cadastrar" 
+                    Icon="person_add" 
+                    TextColor="#FFF" 
+                    BackgroundColor="#151773"
+                    HoverBackgroundColor="#23238a" 
+                    Size="md" 
+                    Width="min-w-[125px]"
+                    PreventDefaultStatus=true
+                    OnClick="HandleRegisterAsync" />
+        </div>
     </div>
 </div>
 
@@ -34,4 +45,72 @@
     private string? userCpf;
     private string? userEmail;
     private string? userPassword;
+    private string? errorMessage;
+    private bool isProcessing = false;
+
+    private async Task HandleRegisterAsync()
+    {
+        try
+        {
+            errorMessage = null;
+            
+            if (!ValidateForm())
+                return;
+                
+            isProcessing = true;
+            
+            var userCreateRequest = new UserCreateRequestDto
+            {
+                FullName = userName,
+                Cpf = userCpf,
+                Email = userEmail,
+                PasswordHash = userPassword,
+                Role = Role.Cliente
+            };
+            
+            var result = await UserService.RegisterUserAsync(userCreateRequest);
+            
+            if (result != null)
+            {
+                NavigationManager.NavigateTo("/login");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erro ao cadastrar: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+    
+    private bool ValidateForm()
+    {
+        if (string.IsNullOrWhiteSpace(userName))
+        {
+            errorMessage = "O nome é obrigatório.";
+            return false;
+        }
+        
+        if (string.IsNullOrWhiteSpace(userCpf))
+        {
+            errorMessage = "O CPF é obrigatório.";
+            return false;
+        }
+        
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            errorMessage = "O e-mail é obrigatório.";
+            return false;
+        }
+        
+        if (string.IsNullOrWhiteSpace(userPassword))
+        {
+            errorMessage = "A senha é obrigatória.";
+            return false;
+        }
+        
+        return true;
+    }
 }

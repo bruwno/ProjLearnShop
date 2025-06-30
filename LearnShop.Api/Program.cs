@@ -48,6 +48,7 @@ public class Program
 
         app.RegisterAllEndpoints();
         app.UseHttpsRedirection();
+        app.UseCors("AllowAllOrigins");
         app.UseAuthorization();
         
         app.Run();

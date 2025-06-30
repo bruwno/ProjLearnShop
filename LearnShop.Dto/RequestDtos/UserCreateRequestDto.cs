@@ -9,5 +9,4 @@ public record UserCreateRequestDto
     public required string Email { get; set; } = string.Empty;
     public required string PasswordHash { get; set; } = string.Empty;
     public required Role Role { get; set; }
-    
 }
