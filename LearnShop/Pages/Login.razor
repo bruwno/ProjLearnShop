@@ -1,4 +1,8 @@
 @page "/login"
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Dto.RequestDtos
+@inject IUserService UserService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Login</PageTitle>
 <PageHeader Title="LOGIN" TextSize="2xl" />
@@ -19,7 +23,7 @@
                                 Size="md" 
                                 Width="min-w-[125px]"
                                 PreventDefaultStatus=true
-                                OnClick="@(()=>{})" />
+                                OnClick="HandleLoginAsync" />
             </div>
     </div>
 </div>
@@ -27,4 +31,64 @@
 @code {
     private string? userLogin;
     private string? userPassword;
+    private string? errorMessage;
+    private bool isProcessing = false;
+    
+    private async Task HandleLoginAsync()
+    {
+        try
+        {
+            errorMessage = null;
+
+            if (!ValidateForm())
+                return;
+
+            isProcessing = true;
+
+            var userLoginRequest = new UserLoginRequestDto
+            {
+                Email = userLogin,
+                Password = userPassword
+            };
+
+            var result = await UserService.LoginAsync(userLoginRequest);
+            Console.WriteLine(result);
+
+            if (result is not null)
+            {
+                NavigationManager.NavigateTo("/pedidos");
+            }
+            else
+            {
+                errorMessage = result.Token ?? "Erro ao realizar login. Verifique suas credenciais.";
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+    
+    private bool ValidateForm()
+    {
+        if (string.IsNullOrWhiteSpace(userLogin))
+        {
+            errorMessage = "O email é obrigatório.";
+            return false;
+        }
+        
+        if (string.IsNullOrWhiteSpace(userPassword))
+        {
+            errorMessage = "A senha é obrigatória.";
+            return false;
+        }
+        
+        return true;
+    }
 }

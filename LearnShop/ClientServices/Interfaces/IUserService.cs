@@ -6,4 +6,5 @@ namespace LearnShop.ClientServices.Interfaces;
 public interface IUserService
 {
     Task<UserResponseDto?> RegisterUserAsync(UserCreateRequestDto userCreateRequestDto);
+    Task<LoginResponseDto?> LoginAsync(UserLoginRequestDto userLoginRequestDto);
 }

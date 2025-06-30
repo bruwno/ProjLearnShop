@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using LearnShop.ClientServices.Interfaces;
+using LearnShop.Configs;
 using LearnShop.Dto.RequestDtos;
 using LearnShop.Dto.ResponseDtos;
 
@@ -30,6 +31,25 @@ public class UserService : IUserService
         catch (Exception ex)
         {
             throw new Exception($"Erro ao registrar usuário: {ex.Message}", ex);
+        }
+    }
+
+    public async Task<LoginResponseDto?> LoginAsync(UserLoginRequestDto userLoginRequestDto)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{ApiConfig.BaseUrl}/users/login", userLoginRequestDto);
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+            }
+            
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Ocorreu uma falha na autenticação: {error}");
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Erro ao autenticar: {e.Message}", e);
         }
     }
 }
