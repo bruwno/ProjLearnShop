@@ -17,11 +17,11 @@ public class AuthService : IAuthService
         _userService = userService;
     }
 
-    public async Task<string?> AuthenticateAsync(UserLoginRequestDto userLoginRequest)
+    public async Task<string?> AuthenticateAsync(LoginRequestDto loginRequest)
     {
-        var user = await _userService.GetUserByEmailAsync(userLoginRequest.Email);
+        var user = await _userService.GetUserByEmailAsync(loginRequest.Email);
 
-        if (user is null || !user.CheckPassword(userLoginRequest.Password))
+        if (user is null || !user.CheckPassword(loginRequest.Password))
         {
             return null;
         }

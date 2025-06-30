@@ -14,7 +14,7 @@ public static class AuthConfig
             {
                 options.ForwardDefaultSelector = context =>
                 {
-                    if (context.Request.Headers.ContainsKey("auth_token"))
+                    if (context.Request.Headers.ContainsKey("token"))
                     {
                         return JwtBearerDefaults.AuthenticationScheme;
                     }
@@ -30,7 +30,7 @@ public static class AuthConfig
             })
             .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
             {
-                options.Cookie.Name = "auth_token";
+                options.Cookie.Name = "token";
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.ExpireTimeSpan = TimeSpan.FromHours(1);
@@ -70,7 +70,7 @@ public static class AuthConfig
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["auth_token"];
+                        context.Token = context.Request.Cookies["token"];
                         return Task.CompletedTask;
                     }
                 };

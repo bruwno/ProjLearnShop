@@ -45,7 +45,7 @@ public static class AddUserEndpointsExtensions
         }
     }
 
-    private static async Task<IResult> Login(UserLoginRequestDto loginDto, IAuthService authService)
+    private static async Task<IResult> Login(LoginRequestDto loginDto, IAuthService authService)
     {
         try
         {
@@ -56,7 +56,7 @@ public static class AddUserEndpointsExtensions
                 return TypedResults.Unauthorized();
             }
 
-            return TypedResults.Ok(new { Token = token });
+            return TypedResults.Ok(token);
         }
         catch (Exception ex)
         {
@@ -64,14 +64,15 @@ public static class AddUserEndpointsExtensions
         }
     }
 
-    private static async Task<IResult> RegisterUser(UserCreateRequestDto usercreateRequestDto, IUserService userService){
+    private static async Task<IResult> RegisterUser(UserCreateRequestDto usercreateRequestDto, IUserService userService)
+    {
         try
         {
             if (usercreateRequestDto == null)
             {
                 return TypedResults.BadRequest("O usuário não pode ser nulo.");
             }
-            
+
             var createdUser = await userService.CreateUserAsync(usercreateRequestDto);
 
             if (createdUser == null)
@@ -85,10 +86,10 @@ public static class AddUserEndpointsExtensions
         {
             return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
         }
-
     }
-    
-    private static async Task<IResult> UpdateUser(long id, UserUpdateRequestDto userUpdateRequestDto, IUserService userService)
+
+    private static async Task<IResult> UpdateUser(long id, UserUpdateRequestDto userUpdateRequestDto,
+        IUserService userService)
     {
         try
         {
@@ -111,7 +112,7 @@ public static class AddUserEndpointsExtensions
             return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
         }
     }
-    
+
     private static async Task<IEnumerable<UserResponseDto>> GetAllUsers(IUserService userService)
     {
         try
@@ -124,7 +125,7 @@ public static class AddUserEndpointsExtensions
             throw new Exception($"Ocorreu um erro ao obter os usuários: {ex.Message}");
         }
     }
-    
+
     private static async Task<IResult> GetUserById(long id, IUserService userService)
     {
         try
@@ -143,7 +144,7 @@ public static class AddUserEndpointsExtensions
             return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
         }
     }
-    
+
     private static async Task<IResult> DeleteUser(long id, IUserService userService)
     {
         try

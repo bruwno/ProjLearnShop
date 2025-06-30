@@ -1,3 +1,4 @@
+using System.Text.Json;
 using DotNetEnv;
 using LearnShop.Api.Configs.Cors;
 using LearnShop.Api.Configs.SQLite;
@@ -23,6 +24,12 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.ConfigureCors();
 
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.SerializerOptions.PropertyNameCaseInsensitive = true;
+        });
+        
         // Registrando a SQLite connection
         builder.Services.AddSqliteConfiguration();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
