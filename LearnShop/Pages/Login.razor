@@ -1,12 +1,11 @@
 @page "/login"
 @using System.Text.Json
-@using LearnShop.ClientServices.Interfaces
+@using LearnShop.ClientServices.Auth
 @using LearnShop.Dto.RequestDtos
-@using LearnShop.Dto.ResponseDtos
 @using LearnShop.Helpers
-@inject IUserService UserService
 @inject NavigationManager Navigation
 @inject IJSRuntime Js
+@inject AuthenticationService AuthService
 
 <PageTitle>Login</PageTitle>
 <PageHeader Title="LOGIN" TextSize="2xl"/>
@@ -93,27 +92,22 @@
             Password = UserPassword
         };
 
-        var token = await Js.InvokeAsync<string>("localStorage.getItem", "token");
-
-        if (!string.IsNullOrEmpty(token))
-        {
-            await Js.InvokeVoidAsync("localStorage.removeItem", "token");
-        }
-
-        token = await ApiBackend.PostAsync<string, LoginRequestDto>("users/login", new LoginRequestDto
-        {
-            Email = UserLogin,
-            Password = UserPassword
-        });
+        await AuthService.LogoutAsync();
+        
+        var token = await ApiBackend.PostAsync<string, LoginRequestDto>("users/login", login);
 
         if (string.IsNullOrEmpty(token))
         {
             throw new Exception("Erro ao realizar login. Verifique suas credenciais.");
         }
-
-        var user = await ApiBackend.GetAsync<UserResponseDto>($"users/email/{UserLogin}");
-        await Js.InvokeVoidAsync("localStorage.setItem", "user", JsonSerializer.Serialize(user));
-        await Js.InvokeVoidAsync("localStorage.setItem", "token", token);
+        
+        await AuthService.SaveTokenAsync(token);
+        
+        var userInfo = await AuthService.GetCurrentUserAsync();
+        
+        if (userInfo == null)
+        {
+            throw new Exception("Ocorreu um erro ao processar dados do usuário.");
+        }
     }
-
 }

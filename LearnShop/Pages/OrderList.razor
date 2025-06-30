@@ -1,9 +1,11 @@
 @page "/pedidos"
+@using LearnShop.ClientServices.Auth
 @using LearnShop.ClientServices.Interfaces
-@using LearnShop.Model
 @using LearnShop.Model.Sales
+@using LearnShop.Model.Users
 @inject IOrderService OrderService
-@inject NavigationManager Nav
+@inject NavigationManager Navigation
+@inject AuthenticationService AuthService
 
 <PageTitle>Pedidos</PageTitle>
 
@@ -57,21 +59,38 @@
 </div>
 
 @code {
+    private UserInfo _currentUser;
+    
     private List<Order>? orders;
     private bool isLoading = true;
+    
     protected override async Task OnInitializedAsync()
     {
+        if (!await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        _currentUser = await AuthService.GetCurrentUserAsync();
+        
         isLoading = true;
         orders = await OrderService.GetOrdersAsync();
         isLoading = false;
     }
-
+    
     private void GoToOrderDetails(){
-        Nav.NavigateTo("/detalhes-pedido");
+        Navigation.NavigateTo("/detalhes-pedido");
     }
 
     private void NavigateTo(string url)
     {
-        Nav.NavigateTo(url);
+        Navigation.NavigateTo(url);
+    }
+    
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
     }
 }

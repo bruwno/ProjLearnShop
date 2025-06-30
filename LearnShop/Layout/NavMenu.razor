@@ -1,5 +1,8 @@
-﻿@using LearnShop.Components
+﻿@using LearnShop.ClientServices.Auth
+@using LearnShop.Components
+@using LearnShop.Model.Users
 @inject NavigationManager NavigationManager
+@inject AuthenticationService AuthService
 
 <div class="z-10 flex flex-col w-full">
     <nav class="flex flex-row w-full justify-between items-center p-[1rem] bg-primary">
@@ -22,18 +25,37 @@
                 </svg>
             </button>
 
-            <div class="hidden md:flex flex-col text-white font-bold text-[0.9]">
-                <a href="/login">
-                    <h1>Olá, <span class="cursor-pointer">Entre</span> ou</h1>
-                </a>
-                <a href="/cadastrar/usuario">
-                    <h1 class="cursor-pointer">Cadastre-se</h1>
-                </a>
+            <div class="hidden md:flex flex-col text-white font-bold text-[0.9rem]">
+                @if (_isLogado && _currentUser != null)
+                {
+                    <div class="flex flex-col items-end gap-1">
+                        <a href="/perfil" class="hover:text-highlight transition-colors">
+                            <h1>Olá, <span class="text-highlight cursor-pointer">
+                                @_currentUser.Username
+                            </span></h1>
+                        </a>
+                        <button @onclick="Logout"
+                                class="align-items-end cursor-pointer hover:text-highlight transition-colors">
+                            Sair
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="flex flex-col gap-0 items-end text-white font-bold text-[0.8rem]">
+                        <a href="/login" class="transition-colors">
+                            <span class="cursor-pointer hover:text-green-400 transition-colors">Entre</span>
+                        </a>
+                        <a href="/cadastrar/usuario" class="transition-colors">
+                            <span class="cursor-pointer hover:text-green-400 transition-colors">Cadastre-se</span>
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </nav>
     <SearchBox/>
-    <div class="@(menuAberto ? "" : "hidden") absolute top-[8.8rem] left-0 w-full z-50">
+    <div class="@(_menuAberto ? "" : "hidden") absolute top-[8.8rem] left-0 w-full z-50">
         <div class=" bg-primary text-white h-[3rem] flex items-center justify-center w-full">
             <h1 class="">Categorias</h1>
         </div>
@@ -57,24 +79,32 @@
             </ul>
         </div>
         <div
-            class=" @(!isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
-            <button class="bg-highlight w-full rounded-[0.5rem] text-black">
+            class=" @(!_isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
+            <button class="bg-highlight w-full cursor-pointer rounded-[0.5rem] text-black"
+                    @onclick="@(() => NavigateTo("/login"))">
                 ENTRAR
             </button>
-            <h1 class="text-[0.9rem]">CADASTRE-SE</h1>
+
+            <!-- Para o link CADASTRE-SE -->
+            <h1 class="text-[0.9rem] cursor-pointer" 
+                @onclick="@(() => NavigateTo("/cadastrar/usuario"))">
+                CADASTRE-SE
+            </h1>
         </div>
         <div
-            class="@(isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
+            class="@(_isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
             <div class="flex flex-row justify-between w-full">
-                <a href="/perfil">
-                    <h1 class="text-[1.2rem] border-b"><span class="mr-1 material-icons">person</span>Olá, Samuel</h1>
+                <a @onclick="@(() => NavigateTo("/perfil"))">
+                    <h1 class="text-[1.2rem] border-b">
+                        <span class="mr-1 material-icons">person</span>Olá, @(_currentUser?.Username!)
+                    </h1>
                 </a>
-                <a @onclick="@(() => NavigateTo("/pedidos"))" class="text-[1.2rem] text-highlight border-b">Meus
+                <a @onclick="@(() => NavigateTo("/pedidos"))" class="cursor-pointer text-[1.2rem] text-highlight border-b">Meus
                     Livros</a>
             </div>
 
             @* Manter essa implementação do botão no menu mobile *@
-            <button class="bg-highlight w-full rounded-[0.5rem] text-black" @onclick="@(() => NavigateTo("/"))">
+            <button class="bg-highlight w-full rounded-[0.5rem] text-black" @onclick="@(Logout)">
                 SAIR
             </button>
 
@@ -102,17 +132,34 @@
 </div>
 
 @code {
-    private bool menuAberto = false;
+    private bool _menuAberto = false;
+    private UserInfo? _currentUser;
+    private bool _isLogado = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUser = await AuthService.GetCurrentUserAsync();
+        _isLogado = _currentUser != null;
+    }
+    
     private void TrocarEstadoMenu()
     {
-        menuAberto = !menuAberto;
+        _menuAberto = !_menuAberto;
     }
 
     private void NavigateTo(string url)
     {
+        _menuAberto = false;
         NavigationManager.NavigateTo(url);
     }
 
-    private bool isLogado = true;
+    private async Task Logout()
+    {
+        _menuAberto = false;
+        await AuthService.LogoutAsync();
+        _currentUser = await AuthService.GetCurrentUserAsync();
+        _isLogado = _currentUser != null;
+        StateHasChanged();
+        NavigationManager.NavigateTo("/login");
+    }
 }
