@@ -35,11 +35,6 @@
                 @onclick="@(async () => { await AddToCart(); })">
                 <span class="mr-1 text-sm material-icons">add_shopping_cart</span> Adicionar ao carrinho
             </button>
-            <button
-                class="flex items-center px-3 py-1 text-sm font-medium text-white rounded-md bg-primary hover:bg-primary/80 cursor-pointer"
-                @onclick="@(() => { GoToCart(); })">
-                <span class="mr-1 text-sm material-icons">shopping_cart</span> Comprar agora
-            </button>
         </div>
     </div>
 </div>
@@ -80,7 +75,7 @@
     private async Task AddToCart()
     {
         await CartService.AddToCartAsync(currentEbook, 1);
-        Console.WriteLine($"Adicionando {productTitle} ao carrinho.");
+        GoToCart();
     }
 
     private void GoToCart()

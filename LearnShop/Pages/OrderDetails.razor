@@ -1,4 +1,12 @@
-@page "/detalhes-pedido"
+@page "/detalhes-pedido/{OrderId:long}"
+@using LearnShop.ClientServices.Auth
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Model.Sales
+@using LearnShop.Model.Users
+@using LearnShop.Components
+@inject IOrderService OrderService
+@inject NavigationManager Navigation
+@inject AuthenticationService AuthService
 
 <PageTitle>Detalhes do pedido</PageTitle>
 
@@ -8,53 +16,120 @@
 />
 
 <div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto h-screen">
-
-    <div class="text-center text-lg font-bold mb-2">
-        Pedido: 995 - @DateTime.Parse("2025-03-17").ToString("dd/MM/yyyy")
-    </div>
-
-    <OrderStatus Status="Concluído" TextSize="lg" />
-
-
-    <div class="bg-gray-100 p-6 rounded-lg w-full max-w-md shadow-md mt-2">
-        <div class="flex items-center space-x-4 mb-6">
-
-            <div class="w-15 h-15 bg-gray-300 rounded-md flex items-center justify-center">
-                <span class="text-sm material-icons">image</span>
-            </div>
-
-            <div class="text-left">
-                <p class="font-bold text-lg">Ebook Clean Code</p>
-                <p>Quantidade: 1</p>
-            </div>
-            
-        </div>
-
-        <div class="text-left mb-4">
-            <p class="font-bold text-lg">VALOR:</p>
-            <p>R$ 279,00</p>
-        </div>
-
-        <div class="text-left">
-            <p class="font-bold text-lg">FORMA DE PAGAMENTO:</p>
-            <p>
-                CARTÃO DE CRÉDITO<br />
-                (2x 139,50 sem juros)
-            </p>
-        </div>
-    </div>
-
-    <div class = "mt-6 flex items-center font-bold">
-        <Button Text="Voltar" 
-                Icon="arrow_left" 
+    @if (isLoading)
+    {
+        <Loading/>
+    }
+    else if (order == null)
+    {
+        <div class="text-center p-8">
+            <p class="text-xl mb-4">Pedido não encontrado</p>
+            <Button 
+                Text="Voltar aos pedidos" 
+                Icon="arrow_back" 
                 TextColor="#FFF" 
                 BackgroundColor="#151773"
                 HoverBackgroundColor="#23238a" 
                 Size="md" 
-                Width="min-w-[125px]"
-                PreventDefaultStatus=true
-                OnClick="@(()=>{})" 
-        />
-    </div>
+                OnClick="@(() => Navigation.NavigateTo("/pedidos"))" 
+            />
+        </div>
+    }
+    else
+    {
+        <div class="text-center text-lg font-bold mb-2">
+            Pedido: @order.Id - @order.CreatedAt.ToString("dd/MM/yyyy")
+        </div>
+
+        <OrderStatus Status="@GetStatusDisplayName(order.Status)" TextSize="lg" />
+
+        <div class="bg-gray-100 p-6 rounded-lg w-full max-w-md shadow-md mt-2">
+            @foreach (var item in order.Items)
+            {
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-15 h-15 bg-gray-300 rounded-md flex items-center justify-center">
+                        <span class="text-sm material-icons">book</span>
+                    </div>
+
+                    <div class="text-left">
+                        <p class="font-bold text-lg">E-book (ID: @item.EbookId)</p>
+                        <p>Quantidade: @item.Quantity</p>
+                        <p>Preço unitário: R$ @item.UnitPrice.ToString("F2")</p>
+                    </div>
+                </div>
+            }
+
+            <div class="text-left mb-4">
+                <p class="font-bold text-lg">VALOR TOTAL:</p>
+                <p>R$ @order.TotalPrice.ToString("F2")</p>
+            </div>
+
+            <div class="text-left">
+                <p class="font-bold text-lg">DATA DO PEDIDO:</p>
+                <p>@order.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+            </div>
+        </div>
+
+        <div class="mt-6 flex items-center font-bold">
+            <Button Text="Voltar" 
+                    Icon="arrow_left" 
+                    TextColor="#FFF" 
+                    BackgroundColor="#151773"
+                    HoverBackgroundColor="#23238a" 
+                    Size="md" 
+                    Width="min-w-[125px]"
+                    PreventDefaultStatus=true
+                    OnClick="@(() => Navigation.NavigateTo("/pedidos"))" 
+            />
+        </div>
+    }
 </div>
 
+@code {
+    [Parameter]
+    public long OrderId { get; set; }
+    
+    private Order? order;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        isLoading = true;
+    
+        try
+        {
+            var allOrders = await OrderService.GetOrdersAsync();
+            order = allOrders.FirstOrDefault(o => o.Id == OrderId);
+            
+            var currentUser = await AuthService.GetCurrentUserAsync();
+            if (order != null && order.CustomerId != currentUser.UserId)
+            {
+                Console.WriteLine($"Tentativa de acesso negada: Pedido {OrderId} não pertence ao usuário {currentUser.UserId}");
+                order = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar detalhes do pedido: {ex.Message}");
+            order = null;
+        }
+    
+        isLoading = false;
+    }
+    
+    private string GetStatusDisplayName(LearnShop.Model.Enums.OrderStatus status)
+    {
+        return status switch
+        {
+            LearnShop.Model.Enums.OrderStatus.Concluido => "Concluído",
+            LearnShop.Model.Enums.OrderStatus.Pendente => "Pendente",
+            _ => "Status desconhecido"
+        };
+    }
+}

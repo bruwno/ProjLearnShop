@@ -85,6 +85,44 @@ public class OrderRepository : BaseRepository, IOrderRepository
             return result.FirstOrDefault();
         });
     }
+    
+    public async Task<IEnumerable<Order?>> GetByCustomerIdAsync(long customerId)
+    {
+        return await ExecuteWithConnectionAsync(async connection =>
+        {
+            const string sql = @"
+            SELECT 
+                o.id, o.customer_id as CustomerId, o.total_price as TotalPrice, 
+                o.order_status as Status, o.created_at as CreatedAt,
+                oi.id, oi.order_id as OrderId, oi.ebook_id as EbookId, 
+                oi.quantity, oi.unit_price as UnitPrice, oi.created_at as CreatedAt
+            FROM orders o
+            INNER JOIN order_items oi ON o.id = oi.order_id
+            WHERE o.customer_id = @CustomerId";
+
+            var orderDictionary = new Dictionary<long, Order>();
+
+            var result = await connection.QueryAsync<Order, OrderItem, Order>(
+                sql,
+                (order, orderItem) =>
+                {
+                    if (!orderDictionary.TryGetValue(order.Id, out var orderEntry))
+                    {
+                        orderEntry = order;
+                        orderEntry.Items = new List<OrderItem>();
+                        orderDictionary.Add(order.Id, orderEntry);
+                    }
+
+                    orderEntry.Items.Add(orderItem);
+                    return orderEntry;
+                },
+                new { CustomerId = customerId },
+                splitOn: "id"
+            );
+
+            return orderDictionary.Values;
+        });
+    }
 
     public async Task<Order?> InsertAsync(Order order)
     {   

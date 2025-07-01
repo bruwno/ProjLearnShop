@@ -123,7 +123,7 @@
                     : GenerateRandomBookCover()
             };
 
-            var result = await ApiBackend.PostAsync<Ebook>("ebooks", ebook);
+            var result = await ApiBackend.PostAsync<Ebook>("ebooks", ebook, await AuthService.GetTokenAsync());
 
             if (result != null)
             {

@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using LearnShop.ClientServices.Interfaces;
+using LearnShop.Helpers;
 using LearnShop.Model.Sales;
 
 namespace LearnShop.ClientServices;
@@ -44,6 +45,20 @@ public class OrderService : IOrderService
         {
             Console.WriteLine($"Ocorreu um erro ao tentar criar o pedido: {ex.Message}");
             return null;
+        }
+    }
+    
+    public async Task<List<Order>> GetOrdersByCustomerIdAsync(long customerId)
+    {
+        try
+        {
+            var orders = await ApiBackend.GetAsync<List<Order>>($"orders/customer/{customerId}");
+            return orders ?? new List<Order>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ocorreu um erro ao tentar obter os pedidos do cliente {customerId}: {ex.Message}");
+            return new List<Order>();
         }
     }
 }

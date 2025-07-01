@@ -15,6 +15,7 @@ public static class AddOrderEndpointsExtensions
         orders.MapPut("/{id:long}", UpdateOrder).RequireAuthorization();
         orders.MapDelete("/{id:long}", DeleteOrder)
             .RequireAuthorization(policy => policy.RequireRole("Admin"));
+        orders.MapGet("/customer/{customerId:long}", GetOrderByCustomerId).RequireAuthorization();
     }
 
     private static async Task<IResult> GetAllOrders(IOrderService orderService)
@@ -101,6 +102,20 @@ public static class AddOrderEndpointsExtensions
         catch (ArgumentException ex)
         {
             return TypedResults.BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return TypedResults.InternalServerError($"Ocorreu um erro interno: {ex.Message}");
+        }
+    }
+    
+    private static async Task<IResult> GetOrderByCustomerId(long customerId, IOrderService orderService)
+    {
+        try
+        {
+            var orders = await orderService.GetOrdersByCustomerIdAsync(customerId);
+        
+            return TypedResults.Ok(orders);
         }
         catch (Exception ex)
         {

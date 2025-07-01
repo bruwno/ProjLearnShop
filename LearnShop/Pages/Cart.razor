@@ -120,7 +120,7 @@
                 ButtonText="IR À HOME"
                 ButtonIcon="home"
                 OnContinue="GoToHome"
-                TotalPrice="@(orderCreated?.TotalPrice ?? 0)"
+                TotalPrice="@orderTotal"
             />
         </div>
     }
@@ -134,6 +134,7 @@
     private Order? orderCreated;
     private string productImage = "";
     private string? orderItemName;
+    private decimal orderTotal = 0m;
 
     protected override async Task OnInitializedAsync()
     {
@@ -187,8 +188,6 @@
                 UnitPrice = item.Price,
                 CreatedAt = DateTime.UtcNow
             }).ToList();
-            Console.Write($"Ids dos produtos no pedido: {string.Join(", ", orderItems.Select(i => i.EbookId))}");
-            Console.Write($"Quantity: {string.Join(", ", orderItems.Select(i => i.Quantity))}");
             
             var newOrder = new Order
             {
@@ -198,21 +197,20 @@
                 Status = OrderStatus.Concluido,
                 CreatedAt = DateTime.UtcNow
             };
-            Console.Write("Pedido criado: " + newOrder);
 
-            orderCreated = await ApiBackend.PostAsync<Order>("orders", newOrder);
+            orderCreated = await ApiBackend.PostAsync<Order>("orders", newOrder, await AuthService.GetTokenAsync());
             
             if (orderCreated != null)
             {
+                orderTotal = subtotal;
                 if (cartItems.Any())
                 {
                     productImage = cartItems.First().ImageUrl;
                     orderItemName = cartItems.First().Title;
                 }
                 
-                await CartService.ClearCartAsync();
-                
                 step = 3;
+                await CartService.ClearCartAsync();
             }
             else
             {
@@ -224,8 +222,8 @@
             Console.WriteLine($"Erro ao criar pedido: {ex.Message}");
         }
     }
-
-    private void GoToHome()
+    
+    private async Task GoToHome()
     {
         NavigationManager.NavigateTo("/");
     }

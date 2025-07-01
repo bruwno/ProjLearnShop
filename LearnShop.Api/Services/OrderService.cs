@@ -23,6 +23,12 @@ public class OrderService : IOrderService
     {
        return await _orderRepository.GetByIdAsync(id);
     }
+    
+    public async Task<List<Order>> GetOrdersByCustomerIdAsync(long customerId)
+    {
+        var orders = await _orderRepository.GetByCustomerIdAsync(customerId);
+        return orders.Where(o => o != null).ToList();
+    }
 
     public async Task<Order> CreateOrderAsync(Order order)
     {
