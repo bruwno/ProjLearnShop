@@ -22,15 +22,13 @@ public static class AuthConfig
                     ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
                     ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_PRIVATE_KEY")!)),
-                    ClockSkew = TimeSpan.Zero // Remove tolerância de tempo padrão
+                        Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_PRIVATE_KEY")!))
                 };
 
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
                     {
-                        // Verifica se o token está no cookie primeiro
                         if (string.IsNullOrEmpty(context.Token))
                         {
                             context.Token = context.Request.Cookies["token"];
