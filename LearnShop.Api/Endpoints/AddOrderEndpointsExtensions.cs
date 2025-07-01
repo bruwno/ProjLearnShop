@@ -8,12 +8,13 @@ public static class AddOrderEndpointsExtensions
     public static void AddOrderEndpoints(this WebApplication app)
     {
         var orders = app.MapGroup("/orders");
-        
-        orders.MapGet("/", GetAllOrders);
-        orders.MapGet("/{id:long}", GetOrderById);
-        orders.MapPost("/", CreateOrder);
-        orders.MapPut("/{id:long}", UpdateOrder);
-        orders.MapDelete("/{id:long}", DeleteOrder);
+
+        orders.MapGet("/", GetAllOrders).RequireAuthorization();
+        orders.MapGet("/{id:long}", GetOrderById).RequireAuthorization();
+        orders.MapPost("/", CreateOrder).RequireAuthorization();
+        orders.MapPut("/{id:long}", UpdateOrder).RequireAuthorization();
+        orders.MapDelete("/{id:long}", DeleteOrder)
+            .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
     private static async Task<IResult> GetAllOrders(IOrderService orderService)
@@ -34,12 +35,12 @@ public static class AddOrderEndpointsExtensions
         try
         {
             var order = await orderService.GetOrderByIdAsync(id);
-            
+
             if (order == null)
             {
                 return TypedResults.NotFound($"O pedido com ID {id} não foi encontrado.");
             }
-            
+
             return TypedResults.Ok(order);
         }
         catch (Exception ex)

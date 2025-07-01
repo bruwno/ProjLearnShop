@@ -12,13 +12,14 @@ public static class AddUserEndpointsExtensions
     {
         var users = app.MapGroup("/users");
 
-        users.MapGet("/email/{email}", GetUserByEmail);
+        users.MapGet("/email/{email}", GetUserByEmail).RequireAuthorization();
         users.MapPost("/login", Login);
         users.MapPost("/register", RegisterUser);
-        users.MapPut("/{id:long}", UpdateUser);
-        users.MapGet("/", GetAllUsers);
-        users.MapGet("/{id:long}", GetUserById);
-        users.MapPost("/users/{id:long}/delete", DeleteUser);
+        users.MapPut("/{id:long}", UpdateUser).RequireAuthorization();
+        users.MapGet("/", GetAllUsers).RequireAuthorization();
+        users.MapGet("/{id:long}", GetUserById).RequireAuthorization();
+        users.MapPost("/users/{id:long}/delete", DeleteUser)
+            .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
     private static async Task<IResult> GetUserByEmail(string email, IUserService userService)

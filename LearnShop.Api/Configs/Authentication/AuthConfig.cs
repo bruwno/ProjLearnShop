@@ -1,5 +1,4 @@
 using System.Text;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -9,49 +8,10 @@ public static class AuthConfig
 {
     public static IServiceCollection AddJwtConfiguration(this IServiceCollection services)
     {
-        services.AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
-            .AddPolicyScheme(JwtBearerDefaults.AuthenticationScheme, "Autenticação JWT", options =>
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                options.ForwardDefaultSelector = context =>
-                {
-                    if (context.Request.Headers.ContainsKey("token"))
-                    {
-                        return JwtBearerDefaults.AuthenticationScheme;
-                    }
-
-                    string authHeader = context.Request.Headers.Authorization!;
-                    if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
-                    {
-                        return JwtBearerDefaults.AuthenticationScheme;
-                    }
-
-                    return null;
-                };
-            })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-            {
-                options.Cookie.Name = "token";
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.ExpireTimeSpan = TimeSpan.FromHours(1);
-
-                options.Events = new CookieAuthenticationEvents
-                {
-                    OnRedirectToLogin = context =>
-                    {
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        return Task.CompletedTask;
-                    },
-                    OnRedirectToAccessDenied = context =>
-                    {
-                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                        return Task.CompletedTask;
-                    }
-                };
-            })
-            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-            {
-                options.RequireHttpsMetadata = true;
+                options.RequireHttpsMetadata = false; // Para desenvolvimento
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -61,16 +21,28 @@ public static class AuthConfig
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
                     ValidAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"),
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_PRIVATE_KEY")!))
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_PRIVATE_KEY")!)),
+                    ClockSkew = TimeSpan.Zero // Remove tolerância de tempo padrão
                 };
 
                 options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["token"];
+                        // Verifica se o token está no cookie primeiro
+                        if (string.IsNullOrEmpty(context.Token))
+                        {
+                            context.Token = context.Request.Cookies["token"];
+                        }
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            context.Response.Headers.Add("Token-Expired", "true");
+                        }
                         return Task.CompletedTask;
                     }
                 };

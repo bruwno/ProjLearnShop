@@ -10,11 +10,13 @@ public static class AddEbookEndpointsExtensions
         var ebooks = app.MapGroup("/ebooks");
 
         ebooks.MapGet("/", GetAllEbooks);
-        ebooks.MapGet("/{id:long}", GetEbookById);
+        ebooks.MapGet("/{id:long}", GetEbookById)
+            .RequireAuthorization(policy => policy.RequireRole("Admin", "Cliente"));
         ebooks.MapGet("/categoria/{categoria}", GetEbooksByCategory);
-        ebooks.MapPost("/", CreateEbook);
-        ebooks.MapPut("/{id:long}", UpdateEbook);
-        ebooks.MapDelete("/{id:long}", DeleteEbook);
+        ebooks.MapPost("/", CreateEbook).RequireAuthorization(policy => policy.RequireRole("Admin"));
+        ebooks.MapPut("/{id:long}", UpdateEbook).RequireAuthorization(policy => policy.RequireRole("Admin"));
+        ebooks.MapDelete("/{id:long}", DeleteEbook)
+            .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
 
     private static async Task<IResult> GetAllEbooks(IEbookService ebookService)

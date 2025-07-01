@@ -9,11 +9,12 @@ public static class AddSaleEndpointsExtensions
     {
         var sales = app.MapGroup("/sales");
 
-        sales.MapGet("/", GetAllSales);
-        sales.MapGet("/{id:long}", GetSaleById);
-        sales.MapPost("/", InsertSale);
-        sales.MapPut("/{id:long}", UpdateSale);
-        sales.MapDelete("/{id:long}", DeleteSale);
+        sales.MapGet("/", GetAllSales).RequireAuthorization(policy => policy.RequireRole("Admin"));
+        sales.MapGet("/{id:long}", GetSaleById).RequireAuthorization(policy => policy.RequireRole("Admin"));
+        sales.MapPost("/", InsertSale).RequireAuthorization();
+        sales.MapPut("/{id:long}", UpdateSale).RequireAuthorization(policy => policy.RequireRole("Admin"));
+        sales.MapDelete("/{id:long}", DeleteSale)
+            .RequireAuthorization(policy => policy.RequireRole("Admin"));
     }
     
     private static async Task<IResult> GetAllSales(ISaleService saleService)

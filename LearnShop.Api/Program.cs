@@ -2,6 +2,7 @@ using System.Text.Json;
 using DotNetEnv;
 using LearnShop.Api.Configs.Cors;
 using LearnShop.Api.Configs.SQLite;
+using LearnShop.Api.Configs.Authentication;
 using LearnShop.Api.Endpoints;
 using LearnShop.Api.Services;
 using LearnShop.Api.Services.Interfaces;
@@ -18,19 +19,19 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         Env.Load();
-        string connectionString = Environment.GetEnvironmentVariable("SQLITE_CONNECTION_STRING")!;
         
         // Add services to the container.
         builder.Services.AddAuthorization();
         builder.Services.ConfigureCors();
-
+        builder.Services.AddJwtConfiguration();
+        
         builder.Services.ConfigureHttpJsonOptions(options =>
         {
             options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.SerializerOptions.PropertyNameCaseInsensitive = true;
         });
         
-        // Registrando a SQLite connection
+        // Registrando as dependências
         builder.Services.AddSqliteConfiguration();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IUserService, UserService>();
@@ -52,11 +53,12 @@ public class Program
             app.MapOpenApi();
             app.MapScalarApiReference();
         }
-
-        app.RegisterAllEndpoints();
+        
         app.UseHttpsRedirection();
         app.UseCors("AllowAllOrigins");
+        app.UseAuthentication();
         app.UseAuthorization();
+        app.RegisterAllEndpoints();
         
         app.Run();
     }
