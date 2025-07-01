@@ -1,5 +1,6 @@
 @page "/categoria/{categoryName}"
 @using LearnShop.ClientServices.Interfaces
+@using LearnShop.Helpers
 @using LearnShop.Model.Products
 @inject IEbookService EbookService
 
@@ -66,8 +67,9 @@ else
             isLoading = false;
             return;
         }
-
-        filteredEbooks = await EbookService.GetEbooksByCategoryAsync(categoryName);
+        
+        categoryName = categoryName.Replace("-", " ");
+        filteredEbooks = await ApiBackend.GetAsync<List<Ebook>>($"ebooks/categoria/{categoryName}");
         isLoading = false;
     }
 }
