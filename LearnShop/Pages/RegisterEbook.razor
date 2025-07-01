@@ -20,7 +20,7 @@
 
             <Input Label="Descrição" Type="text" Id="description" @bind-Value="EbookDescription"
                    Placeholder="Digite a descrição do E-book"/>
-
+            
             <Input Label="Autor" Type="text" Id="author" @bind-Value="EbookAuthor"
                    Placeholder="Digite o autor do E-book"/>
 
@@ -135,7 +135,7 @@
                 IsSuccess = true;
                 StateHasChanged();
 
-                await Task.Delay(1500);
+                await Task.Delay(1000);
                 Navigation.NavigateTo("cadastrar/ebook", true);
             }
         }
