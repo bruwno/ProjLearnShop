@@ -1,9 +1,15 @@
 @page "/carrinho"
 @inject NavigationManager NavigationManager
 @inject ICartService CartService
+@inject IOrderService OrderService
+@inject AuthenticationService AuthService
+@using LearnShop.ClientServices.Auth
 @using LearnShop.Components
 @using LearnShop.Model.Sales
+@using LearnShop.Model.Enums
 @using LearnShop.ClientServices.Interfaces
+@using LearnShop.Helpers
+@using OrderStatus = LearnShop.Model.Enums.OrderStatus
 @implements IDisposable
 
 <PageTitle>Carrinho</PageTitle>
@@ -172,20 +178,51 @@
 
     private async Task PlaceOrder()
     {
-        orderCreated = new Order
+        try
         {
-            Id = new Random().Next(1000, 9999),
-            TotalPrice = subtotal,
-        };
-        
-        if (cartItems.Any())
-        {
-            productImage = cartItems.First().ImageUrl;
-            orderItemName = cartItems.First().Title;
+            var orderItems = cartItems.Select(item => new OrderItem
+            {
+                EbookId = item.EbookId,
+                Quantity = item.Quantity,
+                UnitPrice = item.Price,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+            Console.Write($"Ids dos produtos no pedido: {string.Join(", ", orderItems.Select(i => i.EbookId))}");
+            Console.Write($"Quantity: {string.Join(", ", orderItems.Select(i => i.Quantity))}");
+            
+            var newOrder = new Order
+            {
+                CustomerId = await AuthService.GetUserIdAsync(),
+                Items = orderItems,
+                TotalPrice = subtotal,
+                Status = OrderStatus.Concluido,
+                CreatedAt = DateTime.UtcNow
+            };
+            Console.Write("Pedido criado: " + newOrder);
+
+            orderCreated = await ApiBackend.PostAsync<Order>("orders", newOrder);
+            
+            if (orderCreated != null)
+            {
+                if (cartItems.Any())
+                {
+                    productImage = cartItems.First().ImageUrl;
+                    orderItemName = cartItems.First().Title;
+                }
+                
+                await CartService.ClearCartAsync();
+                
+                step = 3;
+            }
+            else
+            {
+                Console.WriteLine("Erro ao criar o pedido");
+            }
         }
-        
-        await CartService.ClearCartAsync();
-        step = 3;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao criar pedido: {ex.Message}");
+        }
     }
 
     private void GoToHome()

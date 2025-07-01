@@ -95,8 +95,8 @@ public class OrderRepository : BaseRepository, IOrderRepository
             { 
                 const string orderSql = @"
                     INSERT INTO orders(customer_id, total_price,order_status,created_at)
-                    VALUES (@CustomerId, @TotalPrice, @OrderStatus, @CreatedAt);
-                    SELECT * FROM orders WHERE Id = last_insert_rowid()";
+                    VALUES (@CustomerId, @TotalPrice, @OrderStatus, @CreatedAt)
+                    RETURNING id, customer_id AS CustomerId, total_price AS TotalPrice, order_status AS OrderStatus, created_at AS CreatedAt";
                 
                 string orderStatusValue = order.Status == OrderStatus.Concluido ? "concluido" : "pendente";
                 

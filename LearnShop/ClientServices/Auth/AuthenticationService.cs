@@ -73,10 +73,10 @@ public class AuthenticationService
         return user is not null;
     }
 
-    public async Task<string?> GetUserIdAsync()
+    public async Task<long> GetUserIdAsync()
     {
         var user = await GetCurrentUserAsync();
-        return user?.UserId.ToString();
+        return user.UserId;
     }
 
     public async Task<string?> GetUsernameAsync()
