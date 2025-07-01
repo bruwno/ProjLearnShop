@@ -94,19 +94,20 @@ public class OrderRepository : BaseRepository, IOrderRepository
             try
             { 
                 const string orderSql = @"
-                    INSERT INTO orders(id, customer_id, total_price,order_status,created_at)
-                    VALUES (@Id, @CustomerId, @TotalPrice, @OrderStatus, @CreatedAt);
+                    INSERT INTO orders(customer_id, total_price,order_status,created_at)
+                    VALUES (@CustomerId, @TotalPrice, @OrderStatus, @CreatedAt);
                     SELECT * FROM orders WHERE Id = last_insert_rowid()";
-
+                
+                string orderStatusValue = order.Status == OrderStatus.Concluido ? "concluido" : "pendente";
+                
                 var insertedOrder = await connection.QueryFirstOrDefaultAsync<Order>(
                     orderSql,
                     new
                     {
-                        Id = order.Id,
                         order.CustomerId,
                         order.TotalPrice,
-                        OrderStatus = order.Status.ToString(),
-                        CreatedAt = order.CreatedAt
+                        OrderStatus = orderStatusValue,
+                        CreatedAt = order.CreatedAt.ToString("yyyy-MM-dd HH:mm")
                     },
                     transaction);
 
@@ -129,7 +130,7 @@ public class OrderRepository : BaseRepository, IOrderRepository
                             EbookId = item.EbookId,
                             Quantity = item.Quantity,
                             UnitPrice = item.UnitPrice,
-                            CreatedAt = item.CreatedAt
+                            CreatedAt = item.CreatedAt.ToString("yyyy-MM-dd HH:mm")
                         },
                         transaction);
                 }
@@ -144,8 +145,10 @@ public class OrderRepository : BaseRepository, IOrderRepository
             }
             catch (Exception e)
             {
-               transaction.Rollback();
-               throw new Exception("Erro ao inserir o pedido e os itens do pedido.", e);
+                transaction.Rollback();
+                Console.WriteLine($"Erro detalhado: {e.Message}");
+                if (e.InnerException != null) Console.WriteLine($"Inner: {e.InnerException.Message}");
+                throw new Exception("Erro ao inserir o pedido e os itens do pedido.", e);
             }
         });
     }

@@ -8,4 +8,6 @@ public interface IEbookService
     Task<Ebook?> GetEbookByIdAsync(long id);
     Task<List<Ebook>> GetEbooksByCategoryAsync(string category);
     Task<Ebook> CreateEbookAsync(Ebook ebook);
+    Task<Ebook?> UpdateEbookAsync(long id, Ebook ebook);
+    Task DeleteEbookAsync(long id);
 }

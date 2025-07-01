@@ -13,5 +13,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<IEbookService, EbookService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IEbookService, EbookService>();
 
 await builder.Build().RunAsync();
