@@ -6,7 +6,6 @@
 @using LearnShop.ClientServices.Interfaces
 @implements IDisposable
 
-
 <PageTitle>Carrinho</PageTitle>
 
 <PageHeader
@@ -14,25 +13,46 @@
     TextSize="2xl"
 />
 
+<div class="container flex flex-col items-center justify-center w-full max-w-4xl mx-auto my-4">
+    <Stepper step="@step" />
+</div>
+
 <div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto">
-    @if (cartItems == null || !cartItems.Any())
+    @if ((cartItems == null || !cartItems.Any()) && step != 3)
     {
-        <div class="text-center text-lg text-gray-600">Seu carrinho está vazio.</div>
+        <!-- Conteúdo do carrinho vazio -->
+        <div class="text-center p-8">
+            <p class="text-xl mb-4">Seu carrinho está vazio</p>
+            <Button 
+                Text="Continuar comprando" 
+                Icon="shopping_bag" 
+                TextColor="#FFF" 
+                BackgroundColor="#151773"
+                HoverBackgroundColor="#23238a" 
+                Size="md" 
+                OnClick="@(() => NavigationManager.NavigateTo("/"))" 
+            />
+        </div>
     }
-    else
+    else if (step == 1 && cartItems != null && cartItems.Any())
     {
-        @foreach (var item in cartItems)
-        {
-            <div class="flex flex-row items-center justify-between w-full m-2 bg-white rounded shadow p-2">
-                <ProductOnCart
-                    ProductName="@item.Title"
-                    ProductImage="@item.ImageUrl"
-                    ProductPrice="@item.Price"
-                    QuantityChanged="@(q => UpdateQuantity(item.EbookId, q))"
-                />
-                <button class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" @onclick="() => RemoveItem(item.EbookId)">Remover</button>
-            </div>
-        }
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            @foreach (var item in cartItems)
+            {
+                <div class="w-full mb-3">
+                    <ProductOnCart
+                        ProductName="@item.Title"
+                        ProductImage="@item.ImageUrl"
+                        ProductPrice="@item.Price"
+                        QuantityChanged="@(q => UpdateQuantity(item.EbookId, q))"
+                    />
+                    <button class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" @onclick="() => RemoveItem(item.EbookId)">Remover</button>
+                </div>
+            }
+        </div>
+        
+        <ClearCart OnClick="ClearCart"/>
+
         <div class="flex items-center justify-center w-full m-1">
             <Subtotal 
                 ButtonText="CONTINUAR PARA O PAGAMENTO"
@@ -41,8 +61,61 @@
                 TotalPrice="@subtotal"
             />
         </div>
+    }
+    else if (step == 2 && cartItems != null && cartItems.Any())
+    {
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            <div class="border border-gray-300 rounded p-4 w-full">
+                <h3 class="font-bold mb-2">Método de Pagamento</h3>
+                <CartOrderPayment 
+                    SelectedPaymentMethod="@paymentMethod" 
+                    SelectedPaymentMethodChanged="@((string value) => paymentMethod = value)" />
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center justify-center w-full m-2">
+            @foreach (var item in cartItems)
+            {
+                <div class="w-full mb-3">
+                    <ProductOnCart
+                        ProductName="@item.Title"
+                        ProductImage="@item.ImageUrl"
+                        ProductPrice="@item.Price"
+                    />
+                </div>
+            }
+        </div>
+
+        <ClearCart OnClick="ClearCart"/>
+
         <div class="flex items-center justify-center w-full m-1">
-            <ClearCart OnClick="ClearCart" />
+            <Subtotal 
+                ButtonText="FECHAR PEDIDO"
+                ButtonIcon="shopping_cart_checkout"
+                OnContinue="PlaceOrder"
+                TotalPrice="@subtotal"
+            />
+        </div>
+    }
+    else if (step == 3)
+    {
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            <CartOrderPlaced
+                ProductName="@(orderItemName ?? string.Empty)"
+                ProductImage="@productImage"
+                ProductPrice="@(orderCreated?.TotalPrice ?? 0)"
+                OrderNumber="@(orderCreated?.Id.ToString() ?? "N/A")"
+                PaymentType="@GetPaymentMethodName()"
+            />
+        </div>
+
+        <div class="flex items-center justify-center w-full m-1">
+            <Subtotal 
+                ButtonText="IR À HOME"
+                ButtonIcon="home"
+                OnContinue="GoToHome"
+                TotalPrice="@(orderCreated?.TotalPrice ?? 0)"
+            />
         </div>
     }
 </div>
@@ -51,6 +124,10 @@
     private List<CartItem> cartItems = new();
     private decimal subtotal = 0m;
     private int step = 1;
+    private string paymentMethod = "credit_card";
+    private Order? orderCreated;
+    private string productImage = "";
+    private string? orderItemName;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,7 +167,41 @@
 
     private void GoToPayment()
     {
-        NavigationManager.NavigateTo("/pagamento");
+        step = 2;
+    }
+
+    private async Task PlaceOrder()
+    {
+        orderCreated = new Order
+        {
+            Id = new Random().Next(1000, 9999),
+            TotalPrice = subtotal,
+        };
+        
+        if (cartItems.Any())
+        {
+            productImage = cartItems.First().ImageUrl;
+            orderItemName = cartItems.First().Title;
+        }
+        
+        await CartService.ClearCartAsync();
+        step = 3;
+    }
+
+    private void GoToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    
+    private string GetPaymentMethodName()
+    {
+        return paymentMethod switch
+        {
+            "credit_card" => "Cartão de Crédito",
+            "boleto" => "Boleto Bancário",
+            "pix" => "PIX",
+            _ => "Método de pagamento desconhecido"
+        };
     }
 
     public void Dispose()

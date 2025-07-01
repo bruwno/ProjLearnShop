@@ -23,9 +23,18 @@
                 TextSize="xl"
             />
             <div class="ml-auto">
-                <Counter
-                    QuantityChanged="OnQuantityChanged"
-                />
+                @if (ShowRemoveButton)
+                {
+                    <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" @onclick="HandleRemoveClick">
+                        <span class="material-icons">delete</span> Remover
+                    </button>
+                }
+                else if (QuantityChanged.HasDelegate)
+                {
+                    <Counter
+                        QuantityChanged="OnQuantityChanged"
+                    />
+                }
             </div>
         </div>
     </div>
@@ -43,6 +52,12 @@
 
     [Parameter]
     public EventCallback<int> QuantityChanged { get; set; }
+    
+    [Parameter]
+    public bool ShowRemoveButton { get; set; } = false;
+    
+    [Parameter]
+    public EventCallback OnRemoveClick { get; set; }
 
     private int quantity = 1;
 
@@ -50,5 +65,10 @@
     {
         quantity = newQuantity;
         QuantityChanged.InvokeAsync(quantity);
+    }
+    
+    private async Task HandleRemoveClick()
+    {
+        await OnRemoveClick.InvokeAsync();
     }
 }
