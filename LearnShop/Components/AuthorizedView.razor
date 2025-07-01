@@ -1,0 +1,73 @@
+@using LearnShop.ClientServices.Auth
+@using LearnShop.Model.Enums
+@inject AuthenticationService AuthService
+@inject NavigationManager Navigation
+
+@if (_isLoading)
+{
+    <Loading/>
+}
+else if (!_isAuthorized)
+{
+    <div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto mt-10 h-auto">
+        <div class="text-center p-8">
+            <div class="flex justify-center mb-4">
+                <span class="material-icons text-red-600 text-6xl">block</span>
+            </div>
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Acesso negado</h2>
+            <h2 class="text-1xl font-bold text-red-600 mb-4">Erro 403</h2>
+            <p class="text-lg mb-4 mt-5">@Message</p>
+        </div>
+        <div class="flex items-center justify-center bg-transparent mt-5">
+            <Button Text="@BackButtonText"
+                    Icon="home"
+                    TextColor="#FFF"
+                    BackgroundColor="#151773"
+                    HoverBackgroundColor="#23238a"
+                    Size="md"
+                    Width="min-w-[125px]"
+                    PreventDefaultStatus=true
+                    OnClick="@(() => Navigation.NavigateTo(RedirectUrl))"/>
+        </div>
+    </div>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public Role[] AllowedRoles { get; set; } = Array.Empty<Role>();
+    [Parameter] public string Message { get; set; } = "Você não tem permissão para acessar esta página.";
+    [Parameter] public string BackButtonText { get; set; } = "Voltar para a Home";
+    [Parameter] public string RedirectUrl { get; set; } = "/";
+
+    private bool _isLoading = true;
+    private bool _isAuthorized = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var currentUser = await AuthService.GetCurrentUserAsync();
+            if (currentUser is not null && AllowedRoles.Contains(currentUser.Role))
+            {
+                _isAuthorized = true;
+            }
+            else
+            {
+                _isAuthorized = false;
+            }
+        }
+        catch
+        {
+            _isAuthorized = false;
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+}
