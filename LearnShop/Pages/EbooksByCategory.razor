@@ -34,9 +34,10 @@ else
             @foreach (var ebook in filteredEbooks) 
             {
                 <a
-                    href="@($"/product?productTitle={Uri.EscapeDataString(ebook.Title)}&productCategory={Uri.EscapeDataString(ebook.Category)}&productDescription={Uri.EscapeDataString(ebook.Description)}&productPrice={ebook.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}&productImage={Uri.EscapeDataString(ebook.ImageUrl)}")"
+                    href="@($"/product?productId={ebook.Id}&productTitle={Uri.EscapeDataString(ebook.Title)}&productCategory={Uri.EscapeDataString(ebook.Category)}&productDescription={Uri.EscapeDataString(ebook.Description)}&productPrice={ebook.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}&productImage={Uri.EscapeDataString(ebook.ImageUrl)}")"                    
                     class="transition-shadow duration-300 ease-in-out">
                     <ProductCard
+                        ProductId="@ebook.Id"
                         ProductTitle="@ebook.Title" 
                         ProductDescription="@ebook.Description" 
                         ProductImage="@ebook.ImageUrl" 

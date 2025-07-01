@@ -1,5 +1,8 @@
 ﻿@inherits ComponentBase
+@using LearnShop.ClientServices.Interfaces
 @using LearnShop.Components
+@inject ICartService CartService
+@inject NavigationManager NavigationManager
 
 <div class="grid grid-rows-[auto_1fr_auto] gap-2 overflow-hidden 
             border rounded-md shadow-md 
@@ -57,7 +60,7 @@
                 Size="md"
                 Width="100px"
                 PreventDefaultStatus=true
-                OnClick="@(() => { AddToCart(); })"
+                OnClick="@(async () => { await AddToCart(); })"
             />
         </div>
     </div>
@@ -93,10 +96,36 @@
 
     [Parameter]
     public decimal Price { get; set; } = 0.0m;
-
-    private void AddToCart() 
+    
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+    
+    private Model.Products.Ebook currentEbook;
+    
+    protected override void OnParametersSet()
     {
-        Console.WriteLine($"Adicionando {ProductTitle} ao carrinho.");
+        currentEbook = new Model.Products.Ebook
+        {
+            Id = ProductId,
+            Title = ProductTitle,
+            Description = ProductDescription,
+            ImageUrl = ProductImage,
+            Author = Author,
+            Publisher = Publisher,
+            Category = Category,
+            Price = Price
+        };
+    }
+
+    private async Task AddToCart()
+    {
+        await CartService.AddToCartAsync(currentEbook, 1);
+        GoToCart();
+    }
+    
+    private void GoToCart()
+    {
+        NavigationManager.NavigateTo("/carrinho");
     }
 
 }

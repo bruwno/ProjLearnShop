@@ -4,9 +4,11 @@
 @using LearnShop.Model.Sales
 @using LearnShop.Model.Users
 @using LearnShop.Components
+@using LearnShop.Helpers;
 @inject IOrderService OrderService
 @inject NavigationManager Navigation
 @inject AuthenticationService AuthService
+
 
 <PageTitle>Detalhes do pedido</PageTitle>
 
@@ -104,8 +106,7 @@
     
         try
         {
-            var allOrders = await OrderService.GetOrdersAsync();
-            order = allOrders.FirstOrDefault(o => o.Id == OrderId);
+            order = await ApiBackend.GetAsync<Order>($"orders/{OrderId}", await AuthService.GetTokenAsync());
             
             var currentUser = await AuthService.GetCurrentUserAsync();
             if (order != null && order.CustomerId != currentUser.UserId)
