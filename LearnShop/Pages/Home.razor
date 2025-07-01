@@ -2,6 +2,7 @@
 @using LearnShop.ClientServices.Interfaces
 @using LearnShop.Model
 @using LearnShop.Components
+@using LearnShop.Helpers
 @using LearnShop.Model.Products
 @using Microsoft.JSInterop
 @inject IEbookService EbookService
@@ -60,7 +61,7 @@
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        ebooks = await EbookService.GetEbooksAsync();
+        ebooks = await ApiBackend.GetAsync<List<Ebook>>("ebooks/");
         isLoading = false;
     }
 
