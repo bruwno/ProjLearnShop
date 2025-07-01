@@ -64,6 +64,7 @@ public class AuthenticationService
     {
         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "token");
         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "user");
+        await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "learnshop_cart");
         OnAuthenticationStateChanged?.Invoke();
     }
 
