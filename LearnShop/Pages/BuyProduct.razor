@@ -54,8 +54,8 @@
     [Parameter] [SupplyParameterFromQuery] public string productDescription { get; set; } = string.Empty;
 
     [Parameter] [SupplyParameterFromQuery] public decimal productPrice { get; set; } = 0.0m;
-    
-    [Parameter] [SupplyParameterFromQuery] public long productId { get; set; } = 0;
+
+    [Parameter] [SupplyParameterFromQuery] public long productId { get; set; }
 
     private Model.Products.Ebook currentEbook;
     protected override void OnInitialized()
