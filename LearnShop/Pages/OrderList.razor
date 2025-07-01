@@ -79,7 +79,7 @@
         
         try
         { 
-            orders = await ApiBackend.GetAsync<List<Order>>($"orders/customer/{await AuthService.GetUserIdAsync()}", await AuthService.GetTokenAsync());
+            orders = await ApiBackend.GetAsync<List<Order>>($"orders/customer/{_currentUser.UserId}", await AuthService.GetTokenAsync());
         }
         catch (Exception ex)
         {
