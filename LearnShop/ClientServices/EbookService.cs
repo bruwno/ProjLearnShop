@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using LearnShop.ClientServices.Interfaces;
+using LearnShop.Helpers;
 using LearnShop.Model.Products;
 
 namespace LearnShop.ClientServices;
@@ -17,7 +18,13 @@ public class EbookService : IEbookService
     {
         try
         {
-            return await _httpClient.GetFromJsonAsync<List<Ebook>>("data/products.json") ?? new List<Ebook>();
+            var ebooks = await ApiBackend.GetAsync<List<Ebook>>("ebooks/");
+            if (ebooks is null)
+            {
+                return new List<Ebook>();
+            }
+            
+            return ebooks;
         }
         catch (Exception ex)
         {
@@ -29,18 +36,21 @@ public class EbookService : IEbookService
     {
         try
         {
-            var ebooksFromCategory = await _httpClient.GetFromJsonAsync<List<Ebook>>("data/products.json");
+            var ebooksFromCategory = await ApiBackend.GetAsync<List<Ebook>>($"ebooks/categoria/{category}");
+            if (ebooksFromCategory == null && ebooksFromCategory.Any())
+            {
+                return ebooksFromCategory;
+            }
 
-            if (ebooksFromCategory == null || !ebooksFromCategory.Any())
+            if (ebooksFromCategory is null || !ebooksFromCategory.Any())
             {
                 return new List<Ebook>();
             }
 
             var cleanedCategory = category.Replace("-", " ", StringComparison.OrdinalIgnoreCase);
-
             var ebooks = ebooksFromCategory.Where(e => e.Category.Equals(cleanedCategory, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            return ebooks.Count > 0 ? ebooks : new List<Ebook>();
+            return ebooks.Any() ? ebooks : new List<Ebook>();
         }
         catch (Exception ex)
         {

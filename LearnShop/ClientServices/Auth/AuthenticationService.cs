@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using LearnShop.Model.Enums;
 using LearnShop.Model.Users;
 using Microsoft.JSInterop;

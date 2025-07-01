@@ -1,5 +1,6 @@
 ﻿@using LearnShop.ClientServices.Auth
 @using LearnShop.Components
+@using LearnShop.Model.Enums
 @using LearnShop.Model.Users
 @inject NavigationManager NavigationManager
 @inject AuthenticationService AuthService
@@ -25,14 +26,23 @@
                 </svg>
             </button>
 
-            <div class="hidden md:flex flex-col text-white font-bold text-[0.9rem]">
+            <div class="hidden md:flex flex-row text-white font-bold text-[0.9rem] gap-1">
+                @if (_isLogado && _currentUser.Role == Role.Admin)
+                {
+                    <Button Text="Cadastrar" Icon="add" TextColor="#FFF" BackgroundColor="#151773"
+                            HoverBackgroundColor="#23238a" Size="md" Width="min-w-[125px]"
+                            PreventDefaultStatus=true
+                            OnClick="@(() => NavigateTo("/cadastrar/ebook"))"/>
+                }
+                
                 @if (_isLogado && _currentUser != null)
                 {
                     <div class="flex flex-col items-end gap-1">
                         <a href="/perfil" class="hover:text-highlight transition-colors">
-                            <h1>Olá, <span class="text-highlight cursor-pointer">
-                                @_currentUser.Username
-                            </span></h1>
+                            <h1>Olá,
+                                <span class="text-highlight cursor-pointer">
+                                    @_currentUser.Username
+                                </span></h1>
                         </a>
                         <button @onclick="Logout"
                                 class="align-items-end cursor-pointer hover:text-highlight transition-colors">
@@ -78,19 +88,29 @@
                 </li>
             </ul>
         </div>
+
+        @if (_isLogado && _currentUser.Role == Role.Admin)
+        {
+            <div class="bg-secondary flex justify-center p-4">
+                <Button Text="Cadastrar E-book" Icon="add" TextColor="#FFF" BackgroundColor="#151773"
+                        HoverBackgroundColor="#23238a" Size="md" Width="w-full max-w-[200px]"
+                        PreventDefaultStatus=true
+                        OnClick="@(() => NavigateTo("/cadastrar/ebook"))"/>
+            </div>
+        }
+
         <div
             class=" @(!_isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
             <button class="bg-highlight w-full cursor-pointer rounded-[0.5rem] text-black"
                     @onclick="@(() => NavigateTo("/login"))">
                 ENTRAR
             </button>
-
-            <!-- Para o link CADASTRE-SE -->
-            <h1 class="text-[0.9rem] cursor-pointer" 
+            <h1 class="text-[0.9rem] cursor-pointer"
                 @onclick="@(() => NavigateTo("/cadastrar/usuario"))">
                 CADASTRE-SE
             </h1>
         </div>
+
         <div
             class="@(_isLogado ? "" : "hidden") bg-primary flex flex-col gap-[0.7rem] justify-center items-center p-[1rem] w-full text-white p-[1rem]">
             <div class="flex flex-row justify-between w-full">
@@ -99,15 +119,13 @@
                         <span class="mr-1 material-icons">person</span>Olá, @(_currentUser?.Username!)
                     </h1>
                 </a>
-                <a @onclick="@(() => NavigateTo("/pedidos"))" class="cursor-pointer text-[1.2rem] text-highlight border-b">Meus
+                <a @onclick="@(() => NavigateTo("/pedidos"))"
+                   class="cursor-pointer text-[1.2rem] text-highlight border-b">Meus
                     Livros</a>
             </div>
-
-            @* Manter essa implementação do botão no menu mobile *@
             <button class="bg-highlight w-full rounded-[0.5rem] text-black" @onclick="@(Logout)">
                 SAIR
             </button>
-
         </div>
     </div>
     <div class="flex-col hidden text-white md:flex bg-primary">
@@ -141,7 +159,7 @@
         _currentUser = await AuthService.GetCurrentUserAsync();
         _isLogado = _currentUser != null;
     }
-    
+
     private void TrocarEstadoMenu()
     {
         _menuAberto = !_menuAberto;
@@ -162,4 +180,5 @@
         StateHasChanged();
         NavigationManager.NavigateTo("/login");
     }
+
 }
