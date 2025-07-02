@@ -1,5 +1,8 @@
 @page "/perfil"
-@inject NavigationManager Nav
+@using LearnShop.ClientServices.Auth
+@using LearnShop.Model.Users
+@inject NavigationManager Navigation
+@inject AuthenticationService AuthService
 
 <PageTitle>Meu perfil</PageTitle>
 
@@ -9,19 +12,19 @@
 />
 
 <div class="conteiner flex flex-col items-center justify-center container px-3 py-4 mx-auto">
-    <div class="flex flex-col justify-center rounded-2xl w-[90vw] h-[60vh] bg-gray-200 md:w-[40vw] md:h-[75vh]">
+    <div class="flex flex-col justify-center rounded-2xl w-[90vw] h-[60vh] bg-white md:w-[40vw] md:h-[75vh]">
         <div class="flex flex-col items-center justify-center ">
-            <div class="cursor-pointer w-64 h-25 m-6 pl-3 hover:bg-gradient-to-br from-green-600 to-blue-700 border border-black rounded-md text-black font-medium flex items-center"
+            <div class="cursor-pointer w-64 h-25 m-6 pl-3 bg-gray-200 border border-black rounded-md text-black font-medium flex items-center"
             @onclick="GoToProfileEdit">
                 <span class="mr-2 text-sm material-icons">person</span>Meu cadastro
             </div>
 
-            <div class="cursor-pointer w-64 h-25 m-6 pl-3 hover:bg-gradient-to-br from-green-600 to-blue-700 border border-black rounded-md text-black font-medium flex items-center space-x-1"
+            <div class="cursor-pointer w-64 h-25 m-6 pl-3 bg-gray-200 border border-black rounded-md text-black font-medium flex items-center space-x-1"
             @onclick="GoToOrderList">
                 <span class="mr-2 text-sm material-icons">shopping_cart</span>Meus pedidos
             </div>
 
-            <div class="cursor-pointer w-64 h-25 m-6 pl-3 hover:bg-gradient-to-br from-green-600 to-blue-700 border border-black rounded-md text-black font-medium flex items-center space-x-2"
+            <div class="cursor-pointer w-64 h-25 m-6 pl-3 bg-gray-200 border border-black rounded-md text-black font-medium flex items-center space-x-2"
             @onclick="Logout">
                 <span class="mr-2 text-sm material-icons">person_remove</span>Sair
             </div>
@@ -30,25 +33,36 @@
 </div>    
 
 @code {
-
+    private UserInfo? _currentUser;
+    private bool _isLogado = false;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUser = await AuthService.GetCurrentUserAsync();
+        _isLogado = _currentUser != null;
+    }
+    
     private void GoToProfileEdit()
     {
-        Nav.NavigateTo("/perfil/editar");
+        Navigation.NavigateTo("/perfil/editar");
     }
 
     private void GoToOrderList()
     {
-        Nav.NavigateTo("/pedidos");
+        Navigation.NavigateTo("/pedidos");
     }
-
-    private void Logout()
-    {
-       
-        Nav.NavigateTo("/login");
-    }
-
+    
     private void NavigateTo(string url)
     {
-        Nav.NavigateTo(url);
+        Navigation.NavigateTo(url);
+    }
+    
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        _currentUser = await AuthService.GetCurrentUserAsync();
+        _isLogado = _currentUser != null;
+        StateHasChanged();
+        Navigation.NavigateTo("/login", true);
     }
 }

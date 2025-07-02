@@ -1,6 +1,10 @@
+using LearnShop.Model.Users;
+
 namespace LearnShop.Model.Sales;
 
-public class Sale : IModel
+public class Sale : BaseModel
 {
-    public long Id { get; set; }
+    public long OrderId { get; set; }
+    public decimal TotalPrice { get; set; }
+    public DateTime SaleDate { get; set; }
 }

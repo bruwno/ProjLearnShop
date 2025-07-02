@@ -1,6 +1,8 @@
+using LearnShop.Model.Sales;
+
 namespace LearnShop.Infra.Interfaces;
 
-public interface ISaleRepository
+public interface ISaleRepository : IGenericRepository<Sale>
 {
     
 }

@@ -1,5 +1,8 @@
 ﻿@page "/product"
+@using LearnShop.ClientServices.Interfaces
 @inject NavigationManager NavigationManager
+@inject ICartService CartService
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Produto</PageTitle>
 
@@ -14,8 +17,8 @@
     <div class="w-full md:max-w-1/2 border flex justify-center bg-gradient-to-br from-green-600 to-blue-800">
         <img class="max-w-56 bg-gradient-to-br from-green-600 to-blue-800" src=@(ProductImage) alt=""/>
     </div>
-    <div class="flex flex-col items-center justify-center w-full md:max-w-1/2 max-h-1/2 p-[2rem] border text-[0.7rem] md:text-[1rem] text-white flex flex-col gap-[1rem] border rounded-md shadow-md bg-gradient-to-br from-blue-400 to-green-600 
-            hover:shadow-2xl p-4">
+    <div class="flex flex-col items-center justify-center w-full md:max-w-1/2 max-h-1/2 p-[2rem] border text-[0.7rem] md:text-[1rem] text-white gap-[1rem] rounded-md shadow-md bg-gradient-to-br from-blue-400 to-green-600 
+            hover:shadow-2xl">
         <p>@(productDescription)</p>
         <div class="flex flex-col">
             <PriceTag PriceValue=@(productPrice)/>
@@ -29,13 +32,8 @@
         <div class="flex gap-2 items-center justify-center">
             <button
                 class="flex items-center px-3 py-1 text-sm font-medium text-white rounded-md bg-secondary hover:bg-secondary/80 cursor-pointer"
-                @onclick="@(() => { AddToCart(); })">
+                @onclick="@(async () => { await AddToCart(); })">
                 <span class="mr-1 text-sm material-icons">add_shopping_cart</span> Adicionar ao carrinho
-            </button>
-            <button
-                class="flex items-center px-3 py-1 text-sm font-medium text-white rounded-md bg-primary hover:bg-primary/80 cursor-pointer"
-                @onclick="@(() => { GoToCart(); })">
-                <span class="mr-1 text-sm material-icons">shopping_cart</span> Comprar agora
             </button>
         </div>
     </div>
@@ -52,9 +50,32 @@
 
     [Parameter] [SupplyParameterFromQuery] public decimal productPrice { get; set; } = 0.0m;
 
-    private void AddToCart()
+    [Parameter] [SupplyParameterFromQuery] public long productId { get; set; }
+
+    private Model.Products.Ebook currentEbook;
+    protected override void OnInitialized()
     {
-        Console.WriteLine($"Adicionando {productTitle} ao carrinho.");
+        
+        if (string.IsNullOrEmpty(productTitle) || productPrice <= 0)
+        {
+            Console.WriteLine("[ERRO] Dados do produto incompletos!");
+            return;
+        }
+        
+        currentEbook = new Model.Products.Ebook
+        {
+            Id = productId,
+            Title = productTitle,
+            Description = productDescription,
+            Category = productCategory,
+            Price = productPrice,
+            ImageUrl = ProductImage
+        };
+    }
+    private async Task AddToCart()
+    {
+        await CartService.AddToCartAsync(currentEbook, 1);
+        GoToCart();
     }
 
     private void GoToCart()

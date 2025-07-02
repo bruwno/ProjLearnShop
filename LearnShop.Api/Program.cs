@@ -1,3 +1,15 @@
+using System.Text.Json;
+using DotNetEnv;
+using LearnShop.Api.Configs.Cors;
+using LearnShop.Api.Configs.SQLite;
+using LearnShop.Api.Configs.Authentication;
+using LearnShop.Api.Endpoints;
+using LearnShop.Api.Services;
+using LearnShop.Api.Services.Interfaces;
+using LearnShop.Infra;
+using LearnShop.Infra.Interfaces;
+using Scalar.AspNetCore;
+
 namespace LearnShop.Api;
 
 public class Program
@@ -6,10 +18,31 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        Env.Load();
+        
         // Add services to the container.
         builder.Services.AddAuthorization();
-
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        builder.Services.ConfigureCors();
+        builder.Services.AddJwtConfiguration();
+        
+        builder.Services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.SerializerOptions.PropertyNameCaseInsensitive = true;
+        });
+        
+        // Registrando as dependências
+        builder.Services.AddSqliteConfiguration();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+        builder.Services.AddScoped<ISaleService, SaleService>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IOrderService, OrderService>();
+        builder.Services.AddScoped<IEbookRepository, EbookRepository>();
+        builder.Services.AddScoped<IEbookService, EbookService>();
+        
         builder.Services.AddOpenApi();
 
         var app = builder.Build();
@@ -18,31 +51,15 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
-
+        
         app.UseHttpsRedirection();
-
+        app.UseCors("AllowAllOrigins");
+        app.UseAuthentication();
         app.UseAuthorization();
-
-        var summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                        new WeatherForecast
-                        {
-                            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                            TemperatureC = Random.Shared.Next(-20, 55),
-                            Summary = summaries[Random.Shared.Next(summaries.Length)]
-                        })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast");
-
+        app.RegisterAllEndpoints();
+        
         app.Run();
     }
 }

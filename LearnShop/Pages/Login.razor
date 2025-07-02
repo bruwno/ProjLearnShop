@@ -1,30 +1,113 @@
 @page "/login"
+@using System.Text.Json
+@using LearnShop.ClientServices.Auth
+@using LearnShop.Dto.RequestDtos
+@using LearnShop.Helpers
+@inject NavigationManager Navigation
+@inject IJSRuntime Js
+@inject AuthenticationService AuthService
 
 <PageTitle>Login</PageTitle>
-<PageHeader Title="LOGIN" TextSize="2xl" />
+<PageHeader Title="LOGIN" TextSize="2xl"/>
 
 <div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto">
-    <div class="w-full max-w-md flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-600 border rounded-2xl min-w-[90vw] min-h-[55vh] md:min-w-[40vw] lg:min-w-[25vw]">
+    <div
+        class="w-full max-w-md flex flex-col items-center justify-center bg-white border rounded-2xl min-w-[90vw] min-h-[55vh] md:min-w-[40vw] lg:min-w-[25vw]">
         <div class="flex flex-col justify-center rounded-2xl w-[60vw] min-h-[30vh] bg-white  md:w-[20vw] lg:w-[20vw]">
-            <Input Label="Login" Type="text" Id="login" @bind-Value="userLogin" Placeholder="Digite seu login" />
+            <Input Label="Login" Type="text" Id="login" @bind-Value="UserLogin" Placeholder="Digite seu login"/>
 
-            <Input Label="Password" Type="password" Id="password" @bind-Value="userPassword" Placeholder="Digite sua senha" />
+            <Input Label="Password" Type="password" Id="password" @bind-Value="UserPassword"
+                   Placeholder="Digite sua senha"/>
+
         </div>
-            <div class="flex items-center justify-center bg-transparent mt-10">
-                        <Button Text="Entrar" 
-                                Icon="login" 
-                                TextColor="#FFF" 
-                                BackgroundColor="#151773"
-                                HoverBackgroundColor="#23238a" 
-                                Size="md" 
-                                Width="min-w-[125px]"
-                                PreventDefaultStatus=true
-                                OnClick="@(()=>{})" />
+
+        @if (!string.IsNullOrEmpty(Message))
+        {
+            <div class="mt-2 text-sm text-center alert alert-danger">
+                @Message
             </div>
+        }
+        
+        <div class="flex items-center justify-center mt-10 bg-transparent">
+            <Button Text="Entrar"
+                    Icon="login"
+                    TextColor="#FFF"
+                    BackgroundColor="#151773"
+                    HoverBackgroundColor="#23238a"
+                    Size="md"
+                    Width="min-w-[125px]"
+                    PreventDefaultStatus=true
+                    OnClick="HandleLogin"/>
+        </div>
     </div>
 </div>
 
 @code {
-    private string? userLogin;
-    private string? userPassword;
+    [SupplyParameterFromQuery] [Parameter] public string? RedirectIfSuccess { get; set; }
+    public string? Message { get; set; }
+    private string UserLogin { get; set; } = string.Empty;
+    private string UserPassword { get; set; } = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        if (string.IsNullOrEmpty(UserLogin))
+        {
+            Message = "É necessário informar o e-mail.";
+            this.StateHasChanged();
+            return;
+        }
+
+        if (string.IsNullOrEmpty(UserPassword))
+        {
+            Message = "É necessário informar a senha.";
+            this.StateHasChanged();
+            return;
+        }
+
+        try
+        {
+            await HandleLoginAsync();
+        }
+        catch (Exception ex)
+        {
+            Message = $"Ocorreu um erro: {ex.Message}";
+            this.StateHasChanged();
+            return;
+        }
+        
+        if (!string.IsNullOrWhiteSpace(RedirectIfSuccess))
+        {
+            Navigation.NavigateTo(RedirectIfSuccess, true);
+            return;
+        }
+
+        Navigation.NavigateTo("/pedidos", true);
+    }
+
+    private async Task HandleLoginAsync()
+    {
+        var login = new LoginRequestDto
+        {
+            Email = UserLogin,
+            Password = UserPassword
+        };
+
+        await AuthService.LogoutAsync();
+        
+        var token = await ApiBackend.PostAsync<string, LoginRequestDto>("users/login", login);
+
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new Exception("Erro ao realizar login. Verifique suas credenciais.");
+        }
+        
+        await AuthService.SaveTokenAsync(token);
+        
+        var userInfo = await AuthService.GetCurrentUserAsync();
+        
+        if (userInfo == null)
+        {
+            throw new Exception("Ocorreu um erro ao processar dados do usuário.");
+        }
+    }
 }

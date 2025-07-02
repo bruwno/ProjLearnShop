@@ -7,13 +7,16 @@
         Text="Limpar carrinho"
         Icon="remove_shopping_cart"
         Width="md"
-        OnClick="ClearCartItems"
+        OnClick="HandleClearCart"
     />
 </div>
 
 @code {
-    private void ClearCartItems() 
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+    
+    private async Task HandleClearCart()
     {
-        // Implementar a lógica de limpeza do carrinho na próxima etapa do trabalho.
+        await OnClick.InvokeAsync();
     }
 }

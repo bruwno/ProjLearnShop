@@ -1,6 +1,16 @@
 @page "/carrinho"
 @inject NavigationManager NavigationManager
+@inject ICartService CartService
+@inject IOrderService OrderService
+@inject AuthenticationService AuthService
+@using LearnShop.ClientServices.Auth
 @using LearnShop.Components
+@using LearnShop.Model.Sales
+@using LearnShop.Model.Enums
+@using LearnShop.ClientServices.Interfaces
+@using LearnShop.Helpers
+@using OrderStatus = LearnShop.Model.Enums.OrderStatus
+@implements IDisposable
 
 <PageTitle>Carrinho</PageTitle>
 
@@ -9,88 +19,228 @@
     TextSize="2xl"
 />
 
+<div class="container flex flex-col items-center justify-center w-full max-w-4xl mx-auto my-4">
+    <Stepper step="@step" />
+</div>
+
 <div class="container flex flex-col items-center justify-center gap-3 px-3 py-4 mx-auto">
-    @if (step == 1)
+    @if ((cartItems == null || !cartItems.Any()) && step != 3)
     {
-    <div class="flex flex-row items-center justify-center w-full m-2">
-        <CartOrderSummary
-            ProductName="O Programador Pragmático"
-            ProductImage="https://picsum.photos/360/360?random=60"
-            ProductPrice=29.99m
-        />
-    </div>
-    
-    <ClearCart/>
-
-    <div class="flex items-center justify-center w-full m-1">
-        <Subtotal 
-            ButtonText="CONTINUAR PARA O PAGAMENTO"
-            ButtonIcon="add_shopping_cart"
-            OnContinue="GoToPayment"
-        />
-    </div>
-    }
-    else if (step == 2)
-    {
-        <div class="flex flex-row items-center justify-center w-full m-2">
-            <CartOrderPayment/>
-        </div>
-
-        <div class ="flex flex-col items-center justify-center w-full m-2">
-            <ProductOnCart
-                ProductName="O Programador Pragmático"
-                ProductImage="https://picsum.photos/360/360?random=60"
-                ProductPrice=29.99m
+        <!-- Conteúdo do carrinho vazio -->
+        <div class="text-center p-8">
+            <p class="text-xl mb-4">Seu carrinho está vazio</p>
+            <Button 
+                Text="Continuar comprando" 
+                Icon="shopping_bag" 
+                TextColor="#FFF" 
+                BackgroundColor="#151773"
+                HoverBackgroundColor="#23238a" 
+                Size="md" 
+                OnClick="@(() => NavigationManager.NavigateTo("/"))" 
             />
         </div>
+    }
+    else if (step == 1 && cartItems != null && cartItems.Any())
+    {
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            @foreach (var item in cartItems)
+            {
+                <div class="w-full mb-3">
+                    <ProductOnCart
+                        ProductName="@item.Title"
+                        ProductImage="@item.ImageUrl"
+                        ProductPrice="@item.Price"
+                        QuantityChanged="@(q => UpdateQuantity(item.EbookId, q))"
+                    />
+                    <button class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600" @onclick="() => RemoveItem(item.EbookId)">Remover</button>
+                </div>
+            }
+        </div>
+        
+        <ClearCart OnClick="ClearCart"/>
 
-        <ClearCart/>
+        <div class="flex items-center justify-center w-full m-1">
+            <Subtotal 
+                ButtonText="CONTINUAR PARA O PAGAMENTO"
+                ButtonIcon="add_shopping_cart"
+                OnContinue="GoToPayment"
+                TotalPrice="@subtotal"
+            />
+        </div>
+    }
+    else if (step == 2 && cartItems != null && cartItems.Any())
+    {
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            <div class="border border-gray-300 rounded p-4 w-full">
+                <h3 class="font-bold mb-2">Método de Pagamento</h3>
+                <CartOrderPayment 
+                    SelectedPaymentMethod="@paymentMethod" 
+                    SelectedPaymentMethodChanged="@((string value) => paymentMethod = value)" />
+            </div>
+        </div>
 
-       <div class="flex items-center justify-center w-full m-1">
-        <Subtotal 
-            ButtonText="FECHAR PEDIDO"
-            ButtonIcon="shopping_cart_checkout"
-            OnContinue="GoToOrderPlaced"
-        />
-    </div>
+        <div class="flex flex-col items-center justify-center w-full m-2">
+            @foreach (var item in cartItems)
+            {
+                <div class="w-full mb-3">
+                    <ProductOnCart
+                        ProductName="@item.Title"
+                        ProductImage="@item.ImageUrl"
+                        ProductPrice="@item.Price"
+                    />
+                </div>
+            }
+        </div>
+
+        <ClearCart OnClick="ClearCart"/>
+
+        <div class="flex items-center justify-center w-full m-1">
+            <Subtotal 
+                ButtonText="FECHAR PEDIDO"
+                ButtonIcon="shopping_cart_checkout"
+                OnContinue="PlaceOrder"
+                TotalPrice="@subtotal"
+            />
+        </div>
     }
     else if (step == 3)
     {
-    <div class="flex flex-row items-center justify-center w-full m-2">
-        <CartOrderPlaced
-            ProductName="O Programador Pragmático"
-            ProductImage="https://picsum.photos/360/360?random=60"
-            ProductPrice=29.99m
-            OrderNumber="12345"
-            PaymentType="Cartão de Crédito"
-        />
-    </div>
+        <div class="flex flex-row items-center justify-center w-full m-2">
+            <CartOrderPlaced
+                ProductName="@(orderItemName ?? string.Empty)"
+                ProductImage="@productImage"
+                ProductPrice="@(orderCreated?.TotalPrice ?? 0)"
+                OrderNumber="@(orderCreated?.Id.ToString() ?? "N/A")"
+                PaymentType="@GetPaymentMethodName()"
+            />
+        </div>
 
-    <div class="flex items-center justify-center w-full m-1">
-        <Subtotal 
-            ButtonText="IR À HOME"
-            ButtonIcon="home"
-            OnContinue="GoToHome"
-        />
-    </div>
+        <div class="flex items-center justify-center w-full m-1">
+            <Subtotal 
+                ButtonText="IR À HOME"
+                ButtonIcon="home"
+                OnContinue="GoToHome"
+                TotalPrice="@orderTotal"
+            />
+        </div>
     }
 </div>
 
 @code {
+    private List<CartItem> cartItems = new();
+    private decimal subtotal = 0m;
     private int step = 1;
+    private string paymentMethod = "credit_card";
+    private Order? orderCreated;
+    private string productImage = "";
+    private string? orderItemName;
+    private decimal orderTotal = 0m;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CartService.OnCartChanged += OnCartChangedHandler;
+        await ReloadCart();
+    }
+
+    private void OnCartChangedHandler()
+    {
+        _ = ReloadCart();
+    }
+
+    private async Task ReloadCart()
+    {
+        cartItems = await CartService.GetCartItemsAsync();
+        subtotal = await CartService.GetCartTotalPriceAsync();
+        StateHasChanged();
+    }
+
+    private async Task UpdateQuantity(long ebookId, int quantity)
+    {
+        await CartService.UpdateCartItemQuantityAsync(ebookId, quantity);
+        await ReloadCart();
+    }
+
+    private async Task RemoveItem(long ebookId)
+    {
+        await CartService.RemoveFromCartAsync(ebookId);
+        await ReloadCart();
+    }
+
+    private async Task ClearCart()
+    {
+        await CartService.ClearCartAsync();
+        await ReloadCart();
+    }
 
     private void GoToPayment()
     {
         step = 2;
     }
 
-    private void GoToOrderPlaced()
+    private async Task PlaceOrder()
     {
-        step = 3;
-    }
+        try
+        {
+            var orderItems = cartItems.Select(item => new OrderItem
+            {
+                EbookId = item.EbookId,
+                Quantity = item.Quantity,
+                UnitPrice = item.Price,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+            
+            var newOrder = new Order
+            {
+                CustomerId = await AuthService.GetUserIdAsync(),
+                Items = orderItems,
+                TotalPrice = subtotal,
+                Status = OrderStatus.Concluido,
+                CreatedAt = DateTime.UtcNow
+            };
 
-    private void GoToHome()
+            orderCreated = await ApiBackend.PostAsync<Order>("orders", newOrder, await AuthService.GetTokenAsync());
+            
+            if (orderCreated != null)
+            {
+                orderTotal = subtotal;
+                if (cartItems.Any())
+                {
+                    productImage = cartItems.First().ImageUrl;
+                    orderItemName = cartItems.First().Title;
+                }
+                
+                step = 3;
+                await CartService.ClearCartAsync();
+            }
+            else
+            {
+                Console.WriteLine("Erro ao criar o pedido");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao criar pedido: {ex.Message}");
+        }
+    }
+    
+    private async Task GoToHome()
     {
         NavigationManager.NavigateTo("/");
+    }
+    
+    private string GetPaymentMethodName()
+    {
+        return paymentMethod switch
+        {
+            "credit_card" => "Cartão de Crédito",
+            "boleto" => "Boleto Bancário",
+            "pix" => "PIX",
+            _ => "Método de pagamento desconhecido"
+        };
+    }
+
+    public void Dispose()
+    {
+        CartService.OnCartChanged -= OnCartChangedHandler;
     }
 }

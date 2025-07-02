@@ -2,6 +2,7 @@
 @using LearnShop.ClientServices.Interfaces
 @using LearnShop.Model
 @using LearnShop.Components
+@using LearnShop.Helpers
 @using LearnShop.Model.Products
 @using Microsoft.JSInterop
 @inject IEbookService EbookService
@@ -35,9 +36,9 @@
             @foreach (var ebook in ebooks)
             {
                 <a
-                    href="@($"/product?productTitle={Uri.EscapeDataString(ebook.Title)}&productCategory={Uri.EscapeDataString(ebook.Category)}&productDescription={Uri.EscapeDataString(ebook.Description)}&productPrice={ebook.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}&productImage={Uri.EscapeDataString(ebook.ImageUrl)}")"
+                    href="@($"/product?productId={ebook.Id}&productTitle={Uri.EscapeDataString(ebook.Title)}&productCategory={Uri.EscapeDataString(ebook.Category)}&productDescription={Uri.EscapeDataString(ebook.Description)}&productPrice={ebook.Price.ToString(System.Globalization.CultureInfo.InvariantCulture)}&productImage={Uri.EscapeDataString(ebook.ImageUrl)}")"
                     class="transition-shadow duration-300 ease-in-out">
-                    <ProductCard ProductTitle="@ebook.Title" ProductDescription="@ebook.Description"
+                    <ProductCard ProductId = "@ebook.Id" ProductTitle="@ebook.Title" ProductDescription="@ebook.Description"
                         ProductImage="@ebook.ImageUrl" Author="@ebook.Author" Price="@ebook.Price" Publisher="@ebook.Publisher"
                         Category="@ebook.Category" TextColor="#000" />
                 </a>
@@ -60,7 +61,7 @@
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        ebooks = await EbookService.GetEbooksAsync();
+        ebooks = await ApiBackend.GetAsync<List<Ebook>>("ebooks/");
         isLoading = false;
     }
 

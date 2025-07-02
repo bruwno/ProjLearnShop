@@ -1,9 +1,12 @@
 @page "/pedidos"
+@using LearnShop.ClientServices.Auth
 @using LearnShop.ClientServices.Interfaces
-@using LearnShop.Model
+@using LearnShop.Helpers
 @using LearnShop.Model.Sales
+@using LearnShop.Model.Users
 @inject IOrderService OrderService
-@inject NavigationManager Nav
+@inject NavigationManager Navigation
+@inject AuthenticationService AuthService
 
 <PageTitle>Pedidos</PageTitle>
 
@@ -23,12 +26,11 @@
     <div class="flex flex-col items-center justify-center w-full p-5 m-1 font-bold text-black bg-white rounded-lg shadow-md space-y-4">
             @foreach (var order in orders)
             {
-                <div class="cursor-pointer border rounded-lg p-4 shadow-sm w-[80vw]  md:w-[50vw] bg-gradient-to-br from-blue-400 to-green-600"
-                    @onclick="GoToOrderDetails">
+                <div class="cursor-pointer border rounded-lg p-4 shadow-sm w-[80vw] md:w-[50vw] bg-grey-100"
+                     @onclick="() => GoToOrderDetails(order.Id)">
                     <div class="flex justify-between items-center text-[0.9rem] md:text-[1.3rem]">
                         <div>
-                            <h3 class="font-bold">Pedido: @order.Number - @order.Date.ToString("dd/MM/yyyy")</h3>
-                            @order.ProductName
+                            <h3 class="font-bold">Pedido: @order.Id - @order.CreatedAt.ToString("dd/MM/yyyy")</h3>
                         </div>
                         <Button Text="Baixar PDF" 
                                 Icon="download" 
@@ -58,21 +60,48 @@
 </div>
 
 @code {
+    private UserInfo _currentUser;
+    
     private List<Order>? orders;
     private bool isLoading = true;
+    
     protected override async Task OnInitializedAsync()
     {
+        if (!await AuthService.IsAuthenticatedAsync())
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        _currentUser = await AuthService.GetCurrentUserAsync();
+        
         isLoading = true;
-        orders = await OrderService.GetOrdersAsync();
+        
+        try
+        { 
+            orders = await ApiBackend.GetAsync<List<Order>>($"orders/customer/{_currentUser.UserId}", await AuthService.GetTokenAsync());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar pedidos: {ex.Message}");
+            orders = new List<Order>();
+        }
+        
         isLoading = false;
     }
-
-    private void GoToOrderDetails(){
-        Nav.NavigateTo("/detalhes-pedido");
+    
+    private void GoToOrderDetails(long orderId){
+        Navigation.NavigateTo($"/detalhes-pedido/{orderId}");
     }
 
     private void NavigateTo(string url)
     {
-        Nav.NavigateTo(url);
+        Navigation.NavigateTo(url);
+    }
+    
+    private async Task HandleLogout()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/login");
     }
 }
